@@ -36,7 +36,7 @@ def set_page_background(image_path):
         st.text(f"Contents of the current directory: {os.listdir(os.getcwd())}")
 
 # Set background image path
-background_image_path = 'BCU-Diseases/diabetes/background.jpg'
+background_image_path = 'diabetes/background.jpg'
 
 # Set background image
 set_page_background(background_image_path)
