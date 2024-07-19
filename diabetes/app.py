@@ -32,8 +32,10 @@ def set_page_background(image_path):
     else:
         st.warning(f"Background image file '{image_path}' not found.")
 
+# Set background image path
+background_image_path = 'BCU-Diseases/diabetes/background.jpg'
+
 # Set background image
-background_image_path = 'background.jpg'  # Adjust the path if necessary
 set_page_background(background_image_path)
 
 # Sidebar setup and content
