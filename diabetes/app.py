@@ -64,7 +64,27 @@ def load_model(model_file):
 def main():
     if app_mode == "Home":
         st.title("Welcome to Diabetes Prediction System")
-        st.write("Select an option from the sidebar to get started.")
+        st.write("""
+        ## About Diabetes
+        Diabetes is a chronic medical condition that affects how your body turns food into energy. It occurs when your blood glucose, also called blood sugar, is too high. Over time, having too much glucose in your blood can cause serious health problems. The most common types of diabetes are Type 1, Type 2, and gestational diabetes.
+
+        ## Machine Learning Project
+        This diabetes prediction tool is developed using machine learning techniques to predict the likelihood of diabetes in individuals based on various health parameters. The model is trained on the Pima Indians Diabetes Dataset, which includes parameters such as:
+        - Number of Pregnancies
+        - Glucose Level
+        - Blood Pressure
+        - Skin Thickness
+        - Insulin Level
+        - Body Mass Index (BMI)
+        - Diabetes Pedigree Function
+        - Age
+
+        ### Model Accuracy
+        The machine learning model used in this project achieves an accuracy of approximately 80% on the test dataset. This means that the model is able to correctly predict diabetes 80% of the time based on the given health parameters.
+
+        ## Online Predictor
+        Use the sidebar to navigate to the Diabetes Prediction section and input your health parameters to check the likelihood of diabetes. Please note that this tool is for informational purposes only and is not a substitute for professional medical advice.
+        """)
     elif app_mode == "Diabetes Prediction":
         st.title('Diabetes Prediction using ML')
         col1, col2, col3 = st.columns(3)
