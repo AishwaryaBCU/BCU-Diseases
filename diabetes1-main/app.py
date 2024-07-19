@@ -19,7 +19,7 @@ def set_background_image():
         f"""
         <style>
         .stApp {{
-            background-image: url("{background_image_path}");
+            background-image: url("BCU-Diseases/diabetes1-main/background.jpg");
             background-size: cover;
         }}
         </style>
