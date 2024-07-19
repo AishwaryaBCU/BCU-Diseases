@@ -31,6 +31,9 @@ def set_page_background(image_path):
         st.markdown(page_bg_img, unsafe_allow_html=True)
     else:
         st.warning(f"Background image file '{image_path}' not found.")
+        # Print the current working directory and contents for debugging
+        st.text(f"Current working directory: {os.getcwd()}")
+        st.text(f"Contents of the current directory: {os.listdir(os.getcwd())}")
 
 # Set background image path
 background_image_path = 'BCU-Diseases/diabetes/background.jpg'
