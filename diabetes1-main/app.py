@@ -3,22 +3,6 @@ import pickle
 import streamlit as st
 from streamlit_option_menu import option_menu
 
-
-
-# Custom CSS for background image
-def set_background_image():
-    st.markdown(
-        """
-        <style>
-        body {
-            background-image: url("background.jpg");
-            background-size: cover;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
-
 # Set page configuration
 st.set_page_config(page_title="Health Assistant",
                    layout="wide",
