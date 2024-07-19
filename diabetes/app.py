@@ -11,7 +11,7 @@ st.set_page_config(
 
 # Function to set background image
 def set_page_background(image_path):
-    @st.cache_data(suppress_st_warning=True)
+    @st.cache(suppress_st_warning=True)
     def get_base64_of_bin_file(filename):
         with open(filename, 'rb') as f:
             data = f.read()
@@ -41,16 +41,6 @@ background_image_path = 'diabetes/background.jpg'
 # Set background image
 set_page_background(background_image_path)
 
-# Custom CSS for black font color
-custom_css = """
-    <style>
-    .stApp {
-        color: black;
-    }
-    </style>
-"""
-st.markdown(custom_css, unsafe_allow_html=True)
-
 # Sidebar setup and content
 st.sidebar.title("Diabetes Prediction System")
 app_mode = st.sidebar.selectbox(
@@ -64,7 +54,7 @@ The predictions provided by this system are for informational purposes only. Con
 """)
 
 # Function to load saved model
-@st.cache_data(allow_output_mutation=True)
+@st.cache(allow_output_mutation=True)
 def load_model(model_file):
     with open(model_file, 'rb') as f:
         model = pickle.load(f)
