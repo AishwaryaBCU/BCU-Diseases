@@ -1,7 +1,6 @@
 import os
 import pickle
 import streamlit as st
-from streamlit_option_menu import option_menu
 
 # Set page configuration
 st.set_page_config(
@@ -13,21 +12,23 @@ st.set_page_config(
 # Custom CSS for background image
 def set_background_image():
     # Specify the path to your background image
-    background_image_path = 'background.jpg'
+    background_image_path = 'BCU-Diseases/diabetes1-main/background.jpg'
     # Generate CSS to set the background image
     st.markdown(
         f"""
         <style>
         .stApp {{
-            background-image: url("BCU-Diseases/diabetes1-main/background.jpg");
+            background-image: url("{background_image_path}");
             background-size: cover;
         }}
         </style>
         """,
         unsafe_allow_html=True,
     )
-    
+
+# Call the function to set background image
 set_background_image()
+
 # Getting the directory of the main.py
 working_dir = os.path.dirname(os.path.abspath(__file__))
 
