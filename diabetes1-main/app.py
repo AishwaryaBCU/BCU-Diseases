@@ -1,6 +1,7 @@
 import os
 import pickle
 import streamlit as st
+from streamlit_option_menu import option_menu
 
 # Set page configuration
 st.set_page_config(
@@ -9,29 +10,20 @@ st.set_page_config(
     page_icon="🧑‍⚕️"
 )
 
-# Custom CSS for background image
-def set_background_image():
-    # Specify the path to your background image
-    background_image_path = os.path.join(os.path.dirname(__file__), 'background.jpg')
-    # Generate CSS to set the background image
-    st.markdown(
-        f"""
-        <style>
-        .reportview-container {{
-            background: url("data:image/jpeg;base64,{image_base64}") no-repeat center center fixed;
-            background-size: cover;
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+# Getting the directory of the main.py
+working_dir = os.path.dirname(os.path.abspath(__file__))
 
-# Loading the saved models
-diabetes_model = pickle.load(open('diabetes_model.sav', 'rb'))
+# Define the absolute path to your model file
+model_file_path = os.path.join(working_dir, 'diabetes_model.sav')
+
+# Loading the saved model
+try:
+    with open(model_file_path, 'rb') as f:
+        diabetes_model = pickle.load(f)
+except FileNotFoundError:
+    st.error(f"Could not find the file {model_file_path}. Make sure the file exists.")
 
 # Displaying the app
-set_background_image()  # Set the background image
-
 st.title('Diabetes Prediction using ML')
 
 col1, col2, col3 = st.columns(3)
