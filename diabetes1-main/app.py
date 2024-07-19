@@ -10,6 +10,24 @@ st.set_page_config(
     page_icon="🧑‍⚕️"
 )
 
+# Custom CSS for background image
+def set_background_image():
+    # Specify the path to your background image
+    background_image_path = 'background.jpg'
+    # Generate CSS to set the background image
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background-image: url("{background_image_path}");
+            background-size: cover;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+    
+
 # Getting the directory of the main.py
 working_dir = os.path.dirname(os.path.abspath(__file__))
 
