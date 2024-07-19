@@ -27,7 +27,7 @@ def set_background_image():
         unsafe_allow_html=True,
     )
     
-
+set_background_image()
 # Getting the directory of the main.py
 working_dir = os.path.dirname(os.path.abspath(__file__))
 
