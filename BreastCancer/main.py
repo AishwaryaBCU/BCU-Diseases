@@ -7,9 +7,9 @@ import os
 
 # Function to get cleaned data
 def get_clean_data():
-    data_path = "BreastCancer/data.csv"  # Update path as needed
+    data_path = "BreastCancer/data.csv"
     if not os.path.exists(data_path):
-        st.error(f"File `{data_path}` not found.")
+        st.error(f"File {data_path} not found.")
         return pd.DataFrame()  # Return an empty DataFrame if file not found
 
     data = pd.read_csv(data_path)
@@ -98,10 +98,10 @@ def get_scaled_values(input_dict):
 # Function to get radar chart
 def get_radar_chart(input_data):
     input_data = get_scaled_values(input_data)
-
-    categories = ['Radius', 'Texture', 'Perimeter', 'Area', 
-                  'Smoothness', 'Compactness', 'Concavity', 
-                  'Concave Points', 'Symmetry', 'Fractal Dimension']
+    categories = ['Radius', 'Texture', 'Perimeter', 'Area',
+                  'Smoothness', 'Compactness',
+                  'Concavity', 'Concave Points',
+                  'Symmetry', 'Fractal Dimension']
 
     fig = go.Figure()
 
@@ -188,21 +188,8 @@ def add_predictions(input_data):
 def main():
     st.set_page_config(
         page_title="Breast Cancer Diagnosis",
-        page_icon="🔬",  # Medical icon
         layout="wide",
         initial_sidebar_state="expanded"
-    )
-
-    st.markdown(
-        """
-        <style>
-        .reportview-container {
-            background: url("BreastCancer/bg.webp") no-repeat center center fixed;
-            background-size: cover;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
     )
 
     input_data = add_sidebar()
