@@ -11,22 +11,18 @@ st.set_page_config(
     page_icon=":brain:",
 )
 
-# Ensure CSS is correctly loaded
-try:
-    st.markdown(f"<style>{CSS}</style>", unsafe_allow_html=True)
-except NameError:
-    st.error("CSS content not found. Ensure the file path is correct in the config.py.")
+# Function to get base64 encoding of an image file
+def get_base64_of_bin_file(bin_file):
+    try:
+        with open(bin_file, 'rb') as f:
+            data = f.read()
+        return base64.b64encode(data).decode()
+    except FileNotFoundError:
+        st.error(f"File not found: {bin_file}")
+        return None
 
+# Function to set page background
 def set_page_background(png_file, default_file):
-    @st.cache_data()
-    def get_base64_of_bin_file(bin_file):
-        try:
-            with open(bin_file, 'rb') as f:
-                data = f.read()
-            return base64.b64encode(data).decode()
-        except FileNotFoundError:
-            return None
-    
     bin_str = get_base64_of_bin_file(png_file)
     if not bin_str:
         bin_str = get_base64_of_bin_file(default_file)
@@ -41,9 +37,9 @@ def set_page_background(png_file, default_file):
         '''
         st.markdown(page_bg_img, unsafe_allow_html=True)
     else:
-        st.error(f"Background image file not found: {png_file} and default file not found.")
+        st.error(f"Both background image and default image not found.")
 
-# Update these paths based on the output from the directory listing code
+# Update these paths based on your directory structure
 set_page_background('assets/images/bg.webp', 'assets/images/default.webp')
 
 # STREAMLIT APP
