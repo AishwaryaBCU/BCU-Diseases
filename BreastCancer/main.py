@@ -72,7 +72,7 @@ def add_sidebar():
             st.warning(f"Column `{key}` is missing from the data.")
             input_dict[key] = 0  # Default value or handle as appropriate
 
-    st.read("Sidebar input values:", input_dict)  # Debugging line
+    st.write("Sidebar input values:", input_dict)  # Debugging line
     return input_dict
 
 # Function to scale input values
@@ -166,7 +166,7 @@ def add_predictions(input_data):
         st.error(f"Error loading model or scaler: {e}")
         return
 
-    st.read("Input Data for Prediction:", input_data)  # Debugging line
+    st.write("Input Data for Prediction:", input_data)  # Debugging line
 
     try:
         input_array = np.array(list(input_data.values())).reshape(1, -1)
