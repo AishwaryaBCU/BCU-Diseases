@@ -2,17 +2,16 @@ import os
 import pickle
 import base64
 import streamlit as st
-from streamlit_option_menu import option_menu
 
 # Set page configuration
 st.set_page_config(page_title="Parkinson's Disease Prediction",
                    layout="wide",
-                   page_icon="🧠")  # Updated page icon to brain emoji
+                   page_icon="🧠")  # Page icon updated to brain emoji
 
-# Getting the working directory of the main.py
+# Getting the working directory
 working_dir = os.path.dirname(os.path.abspath(__file__))
 
-# Loading the saved models
+# Loading the saved model
 parkinsons_model = pickle.load(open(os.path.join(working_dir, 'parkinsons_model.sav'), 'rb'))
 
 # Function to add custom CSS for background image
@@ -42,21 +41,11 @@ def get_base64_of_file(file_path):
 # Adding the background image
 add_background_image()
 
-# Sidebar for navigation
-with st.sidebar:
-    selected = option_menu('Machine Learning Diseases Prediction System',
-                           [
-                               'Home',
-                               'Parkinsons Prediction',
-                               'Disclaimer'
-                           ],
-                           menu_icon='hospital-fill',
-                           icons=['house', 'person', 'exclamation-triangle'],
-                           default_index=0)
+# Navigation
+st.title("Parkinson's Disease Prediction")
+page = st.selectbox("Select a page:", ["Home", "Parkinson's Prediction", "Disclaimer"])
 
-# Home Page
-if selected == "Home":
-    st.title("Health Assistant")
+if page == "Home":
     st.write("## About Parkinson's Disease")
     st.write("""
     Parkinson's disease is a progressive nervous system disorder that affects movement. Symptoms start gradually, sometimes starting with a barely noticeable tremor in just one hand. Tremors are common, but the disorder also commonly causes stiffness or slowing of movement.
@@ -82,75 +71,47 @@ if selected == "Home":
     """)
     st.write("[Go to Online Predictor](#)")
 
-# Parkinson's Prediction Page
-elif selected == "Parkinsons Prediction":
-    st.title("Parkinson's Disease Prediction using ML")
+elif page == "Parkinson's Prediction":
+    st.write("## Parkinson's Disease Prediction using ML")
 
-    col1, col2, col3, col4, col5 = st.columns(5)
-    with col1:
-        fo = st.text_input('MDVP:Fo(Hz)')
-    with col2:
-        fhi = st.text_input('MDVP:Fhi(Hz)')
-    with col3:
-        flo = st.text_input('MDVP:Flo(Hz)')
-    with col4:
-        Jitter_percent = st.text_input('MDVP:Jitter(%)')
-    with col5:
-        Jitter_Abs = st.text_input('MDVP:Jitter(Abs)')
-    with col1:
-        RAP = st.text_input('MDVP:RAP')
-    with col2:
-        PPQ = st.text_input('MDVP:PPQ')
-    with col3:
-        DDP = st.text_input('Jitter:DDP')
-    with col4:
-        Shimmer = st.text_input('MDVP:Shimmer')
-    with col5:
-        Shimmer_dB = st.text_input('MDVP:Shimmer(dB)')
-    with col1:
-        APQ3 = st.text_input('Shimmer:APQ3')
-    with col2:
-        APQ5 = st.text_input('Shimmer:APQ5')
-    with col3:
-        APQ = st.text_input('MDVP:APQ')
-    with col4:
-        DDA = st.text_input('Shimmer:DDA')
-    with col5:
-        NHR = st.text_input('NHR')
-    with col1:
-        HNR = st.text_input('HNR')
-    with col2:
-        RPDE = st.text_input('RPDE')
-    with col3:
-        DFA = st.text_input('DFA')
-    with col4:
-        spread1 = st.text_input('spread1')
-    with col5:
-        spread2 = st.text_input('spread2')
-    with col1:
-        D2 = st.text_input('D2')
-    with col2:
-        PPE = st.text_input('PPE')
+    # Input fields with clearer labels
+    fo = st.number_input('MDVP: Fo (Hz)', format="%.2f")
+    fhi = st.number_input('MDVP: Fhi (Hz)', format="%.2f")
+    flo = st.number_input('MDVP: Flo (Hz)', format="%.2f")
+    jitter_percent = st.number_input('MDVP: Jitter (%)', format="%.2f")
+    jitter_abs = st.number_input('MDVP: Jitter (Abs)', format="%.2f")
+    rap = st.number_input('MDVP: RAP', format="%.2f")
+    ppq = st.number_input('MDVP: PPQ', format="%.2f")
+    ddp = st.number_input('Jitter: DDP', format="%.2f")
+    shimmer = st.number_input('MDVP: Shimmer', format="%.2f")
+    shimmer_db = st.number_input('MDVP: Shimmer (dB)', format="%.2f")
+    apq3 = st.number_input('Shimmer: APQ3', format="%.2f")
+    apq5 = st.number_input('Shimmer: APQ5', format="%.2f")
+    apq = st.number_input('MDVP: APQ', format="%.2f")
+    dda = st.number_input('Shimmer: DDA', format="%.2f")
+    nhr = st.number_input('NHR', format="%.2f")
+    hnr = st.number_input('HNR', format="%.2f")
+    rpde = st.number_input('RPDE', format="%.2f")
+    dfa = st.number_input('DFA', format="%.2f")
+    spread1 = st.number_input('Spread1', format="%.2f")
+    spread2 = st.number_input('Spread2', format="%.2f")
+    d2 = st.number_input('D2', format="%.2f")
+    ppe = st.number_input('PPE', format="%.2f")
 
-    parkinsons_diagnosis = ''
-    if st.button("Parkinson's Test Result"):
+    if st.button("Get Prediction"):
         try:
-            user_input = [float(fo), float(fhi), float(flo), float(Jitter_percent), float(Jitter_Abs),
-                          float(RAP), float(PPQ), float(DDP), float(Shimmer), float(Shimmer_dB),
-                          float(APQ3), float(APQ5), float(APQ), float(DDA), float(NHR), float(HNR),
-                          float(RPDE), float(DFA), float(spread1), float(spread2), float(D2), float(PPE)]
-            parkinsons_prediction = parkinsons_model.predict([user_input])
-            if parkinsons_prediction[0] == 1:
-                parkinsons_diagnosis = "The person has Parkinson's disease"
+            user_input = [fo, fhi, flo, jitter_percent, jitter_abs, rap, ppq, ddp, shimmer, shimmer_db,
+                          apq3, apq5, apq, dda, nhr, hnr, rpde, dfa, spread1, spread2, d2, ppe]
+            prediction = parkinsons_model.predict([user_input])
+            if prediction[0] == 1:
+                st.success("The person has Parkinson's disease")
             else:
-                parkinsons_diagnosis = "The person does not have Parkinson's disease"
-            st.success(parkinsons_diagnosis)
-        except ValueError:
-            st.error('Please enter valid numbers for all fields.')
+                st.success("The person does not have Parkinson's disease")
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
 
-# Disclaimer Page
-elif selected == "Disclaimer":
-    st.title("Disclaimer")
+elif page == "Disclaimer":
+    st.write("## Disclaimer")
     st.write("""
     The information provided by this application is for educational purposes only. The predictions generated by this tool are based on machine learning models and should not be used as a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition. Never disregard professional medical advice or delay in seeking it because of something you have read or accessed through this application.
     """)
