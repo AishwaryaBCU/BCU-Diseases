@@ -5,7 +5,7 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 
 # Set page configuration
-st.set_page_config(page_title="Health Assistant",
+st.set_page_config(page_title="Parkinson",
                    layout="wide",
                    page_icon="🧠")  # Updated page icon to brain emoji
 
@@ -43,16 +43,19 @@ def get_base64_of_file(file_path):
 add_background_image()
 
 # Sidebar for navigation
-with st.sidebar:
-    selected = option_menu('Machine Learning Diseases Prediction System',
-                           [
-                               'Home',
-                               'Parkinsons Prediction',
-                               'Disclaimer'
-                           ],
-                           menu_icon='hospital-fill',
-                           icons=['house', 'person', 'exclamation-triangle'],
-                           default_index=0)
+# Sidebar setup and content
+st.sidebar.title("Heart Disease Prediction")
+app_mode = st.sidebar.selectbox(
+    "Please navigate through the different sections",
+    ["Home", "Parkinsons Prediction", "Disclaimer"]
+)
+
+st.sidebar.write("""
+# Disclaimer
+The predictions provided by this system are for informational purposes only. Consult a healthcare professional for accurate diagnosis and advice.
+""")
+
+                           
 
 # Home Page
 if selected == "Home":
