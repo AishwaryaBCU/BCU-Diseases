@@ -8,7 +8,7 @@ import os
 
 # Function to get the data
 def get_clean_data():
-    data_file = "data.csv"  # Adjust path if needed
+    data_file = "data.csv"  # Ensure this path is correct
     if not os.path.exists(data_file):
         st.error(f"File `{data_file}` was not found. Please ensure it is in the correct directory.")
         return pd.DataFrame()  # Return an empty DataFrame or handle as needed
@@ -27,7 +27,7 @@ def get_clean_data():
 
 # Function to add background image
 def add_background_image():
-    bg_image_file = "bg.webp"  # Adjust path if needed
+    bg_image_file = "bg.webp"  # Ensure this path is correct
     if not os.path.exists(bg_image_file):
         st.error(f"Background image file `{bg_image_file}` not found.")
         return
@@ -172,8 +172,8 @@ def get_radar_chart(input_data):
 
 # Function to add predictions
 def add_predictions(input_data):
-    model_file = "model.pkl"  # Adjust path if needed
-    scaler_file = "scaler.pkl"  # Adjust path if needed
+    model_file = "model.pkl"  # Ensure this path is correct
+    scaler_file = "scaler.pkl"  # Ensure this path is correct
     
     if not os.path.exists(model_file) or not os.path.exists(scaler_file):
         st.error(f"Model file `{model_file}` or scaler file `{scaler_file}` not found.")
