@@ -10,7 +10,7 @@ st.set_page_config(page_title="Health Prediction System", page_icon="🩺", layo
 
 # Function to set background image
 def set_page_background(image_path):
-    @st.cache(suppress_st_warning=True)
+    @st.cache_data
     def get_base64_of_bin_file(filename):
         with open(filename, 'rb') as f:
             data = f.read()
@@ -21,7 +21,7 @@ def set_page_background(image_path):
         page_bg_img = f'''
             <style>
             .stApp {{
-                background-image: url("data:image/jpg;base64,{bin_str}");
+                background-image: url("data:image/webp;base64,{bin_str}");
                 background-size: cover;
             }}
             </style>
@@ -33,14 +33,14 @@ def set_page_background(image_path):
         st.text(f"Contents of the current directory: {os.listdir(os.getcwd())}")
 
 # Set background image path
-background_image_path = 'diabetes/background.jpg'
+background_image_path = 'heart/bg.webp'
 set_page_background(background_image_path)
 
 # Sidebar setup and content
 st.sidebar.title("Health Prediction System")
 app_mode = st.sidebar.selectbox(
     "Please navigate through the different sections",
-    ["Home", "Diabetes Prediction", "Heart Disease Prediction", "Disclaimer"]
+    ["Home", "Heart Disease Prediction", "Disclaimer"]
 )
 
 st.sidebar.write("""
@@ -49,49 +49,15 @@ The predictions provided by this system are for informational purposes only. Con
 """)
 
 # Function to load saved model
-@st.cache(allow_output_mutation=True)
+@st.cache_data
 def load_model(model_file):
     with open(model_file, 'rb') as f:
         model = pickle.load(f)
     return model
 
-# Load models
-diabetes_model_path = 'diabetes_model.sav'
+# Load model
 heart_disease_model_path = 'heart_disease_model.sav'
-diabetes_model = load_model(diabetes_model_path)
 heart_disease_model = load_model(heart_disease_model_path)
-
-def show_diabetes_prediction():
-    st.title('Diabetes Prediction using ML')
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        Pregnancies = st.text_input('Number of Pregnancies')
-    with col2:
-        Glucose = st.text_input('Glucose Level')
-    with col3:
-        BloodPressure = st.text_input('Blood Pressure value')
-    with col1:
-        SkinThickness = st.text_input('Skin Thickness value')
-    with col2:
-        Insulin = st.text_input('Insulin Level')
-    with col3:
-        BMI = st.text_input('BMI value')
-    with col1:
-        DiabetesPedigreeFunction = st.text_input('Diabetes Pedigree Function value')
-    with col2:
-        Age = st.text_input('Age of the Person')
-
-    if st.button('Diabetes Test Result'):
-        try:
-            user_input = [float(Pregnancies), float(Glucose), float(BloodPressure), float(SkinThickness),
-                          float(Insulin), float(BMI), float(DiabetesPedigreeFunction), float(Age)]
-            diab_prediction = diabetes_model.predict([user_input])
-            if diab_prediction[0] == 1:
-                st.success('The person is diabetic')
-            else:
-                st.success('The person is not diabetic')
-        except ValueError:
-            st.error('Please enter valid numbers for all fields.')
 
 def show_heart_disease_prediction():
     st.title("Heart Disease Risk Prediction")
@@ -112,7 +78,7 @@ def show_heart_disease_prediction():
 
     with col3:
         cp = st.selectbox("Chest Pain Type (0= typical angina, 1 = atypical angina, 2 = non-anginal pain, 3 = asymptomatic)", [0, 1, 2, 3])
-        fbs = st.selectbox("Fasting blood sugar level (1 = >120 mg/dL, 0 = <=120 mg/dL).", [0, 1])
+        fbs = st.selectbox("Fasting blood sugar level (1 = >120 mg/dL, 0 = <=120 mg/dL)", [0, 1])
         exang = st.selectbox("Exercise Induced Angina", [0, 1])
         ca = st.selectbox("Major Vessels Colored by Flourosopy", [0, 1, 2, 3])
 
@@ -132,13 +98,11 @@ def main():
         st.title("Welcome to Health Prediction System")
         st.write("""
         ## About the System
-        This system provides tools for predicting diabetes and heart disease risk using machine learning models. Use the sidebar to navigate to the respective prediction sections.
+        This system provides a tool for predicting heart disease risk using a machine learning model. Use the sidebar to navigate to the prediction section.
 
         ### Disclaimer
         The predictions provided by this system are for informational purposes only and are not a substitute for professional medical advice. Consult a healthcare professional for accurate diagnosis and advice.
         """)
-    elif app_mode == "Diabetes Prediction":
-        show_diabetes_prediction()
     elif app_mode == "Heart Disease Prediction":
         show_heart_disease_prediction()
     elif app_mode == "Disclaimer":
