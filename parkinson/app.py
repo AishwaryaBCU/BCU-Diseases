@@ -1,5 +1,6 @@
 import os
 import pickle
+import base64
 import streamlit as st
 from streamlit_option_menu import option_menu
 
@@ -16,22 +17,25 @@ parkinsons_model = pickle.load(open(os.path.join(working_dir, 'parkinsons_model.
 
 # Function to add custom CSS for background image
 def add_background_image():
-    st.markdown(
-        f"""
-        <style>
-        .stApp {{
-            background-image: url("data:image/webp;base64,{get_base64_of_file('bg.webp')}");
-            background-size: cover;
-            background-position: center;
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+    try:
+        background_image = get_base64_of_file(os.path.join(working_dir, 'bg.webp'))
+        st.markdown(
+            f"""
+            <style>
+            .stApp {{
+                background-image: url("data:image/webp;base64,{background_image}");
+                background-size: cover;
+                background-position: center;
+            }}
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+    except FileNotFoundError:
+        st.error("Background image file not found.")
 
 # Function to get base64 encoding of the image file
 def get_base64_of_file(file_path):
-    import base64
     with open(file_path, "rb") as file:
         return base64.b64encode(file.read()).decode()
 
