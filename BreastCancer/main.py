@@ -7,15 +7,19 @@ import os
 
 # Function to get cleaned data
 def get_clean_data():
-    data_path = "data.csv"
+    data_path = "data.csv"  # Update path as needed
     if not os.path.exists(data_path):
-        st.error(f"File {data_path} not found.")
+        st.error(f"File `{data_path}` not found.")
         return pd.DataFrame()  # Return an empty DataFrame if file not found
 
-    data = pd.read_csv(data_path)
-    data = data.drop(['Unnamed: 32', 'id'], axis=1)
-    data['diagnosis'] = data['diagnosis'].map({'M': 1, 'B': 0})
-    return data
+    try:
+        data = pd.read_csv(data_path)
+        data = data.drop(['Unnamed: 32', 'id'], axis=1)
+        data['diagnosis'] = data['diagnosis'].map({'M': 1, 'B': 0})
+        return data
+    except Exception as e:
+        st.error(f"Error reading the data file: {e}")
+        return pd.DataFrame()  # Return an empty DataFrame in case of error
 
 # Function to add sidebar with input sliders
 def add_sidebar():
