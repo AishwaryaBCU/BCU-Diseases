@@ -7,7 +7,16 @@ try:
         CSS = css_file.read()
 except FileNotFoundError:
     st.error("CSS file not found. Please ensure 'assets/css/styles.css' exists.")
-    CSS = ""
+    CSS = """
+    /* Default CSS in case the file is not found */
+    body {
+        background-color: #f0f0f0;
+    }
+    .stApp {
+        background-color: #f0f0f0;
+    }
+    """
+    st.markdown("CSS file not found. Using default styles.")
 
 # Assets paths
 BACKGROUND = "assets/images/bg.webp"
@@ -104,3 +113,4 @@ TEAM_MEMBERS = [
         ]
     }
 ]
+
