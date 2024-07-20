@@ -1,4 +1,5 @@
 import base64
+import os
 import streamlit as st
 from config import *
 from streamlit_pages._home_page import home_page
@@ -42,13 +43,14 @@ def set_page_background(png_file, default_file):
     else:
         st.error(f"Background image file not found: {png_file} and default file not found.")
 
-set_page_background(BACKGROUND, DEFAULT_BACKGROUND)
+# Update these paths based on the output from the directory listing code
+set_page_background('assets/images/bg.webp', 'assets/images/default.webp')
 
 # STREAMLIT APP
 try:
-    st.sidebar.image(SIDE_BANNER)
+    st.sidebar.image('assets/images/side_banner.webp')
 except FileNotFoundError:
-    st.sidebar.error(f"Side banner image file not found: {SIDE_BANNER}")
+    st.sidebar.error(f"Side banner image file not found: {'assets/images/side_banner.webp'}")
 
 st.sidebar.title("Alzheimer's Prediction System")
 app_mode = st.sidebar.selectbox(
