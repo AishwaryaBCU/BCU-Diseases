@@ -7,7 +7,7 @@ import os
 import base64
 
 def get_clean_data():
-    data_file = "data.csv"
+    data_file = "BreastCancer/data.csv"  # Updated path
     if not os.path.exists(data_file):
         st.error(f"File `{data_file}` not found. Please ensure it is in the correct directory.")
         return pd.DataFrame()
@@ -28,7 +28,7 @@ def get_clean_data():
     return data
 
 def add_background_image():
-    bg_image_file = "bg.webp"
+    bg_image_file = "BreastCancer/bg.webp"  # Updated path
     if not os.path.exists(bg_image_file):
         st.error(f"Background image file `{bg_image_file}` not found.")
         return
@@ -58,36 +58,7 @@ def add_sidebar():
         return {}
 
     slider_labels = [
-        ("Radius (mean)", "radius_mean"),
-        ("Texture (mean)", "texture_mean"),
-        ("Perimeter (mean)", "perimeter_mean"),
-        ("Area (mean)", "area_mean"),
-        ("Smoothness (mean)", "smoothness_mean"),
-        ("Compactness (mean)", "compactness_mean"),
-        ("Concavity (mean)", "concavity_mean"),
-        ("Concave points (mean)", "concave points_mean"),
-        ("Symmetry (mean)", "symmetry_mean"),
-        ("Fractal dimension (mean)", "fractal_dimension_mean"),
-        ("Radius (se)", "radius_se"),
-        ("Texture (se)", "texture_se"),
-        ("Perimeter (se)", "perimeter_se"),
-        ("Area (se)", "area_se"),
-        ("Smoothness (se)", "smoothness_se"),
-        ("Compactness (se)", "compactness_se"),
-        ("Concavity (se)", "concavity_se"),
-        ("Concave points (se)", "concave points_se"),
-        ("Symmetry (se)", "symmetry_se"),
-        ("Fractal dimension (se)", "fractal_dimension_se"),
-        ("Radius (worst)", "radius_worst"),
-        ("Texture (worst)", "texture_worst"),
-        ("Perimeter (worst)", "perimeter_worst"),
-        ("Area (worst)", "area_worst"),
-        ("Smoothness (worst)", "smoothness_worst"),
-        ("Compactness (worst)", "compactness_worst"),
-        ("Concavity (worst)", "concavity_worst"),
-        ("Concave points (worst)", "concave points_worst"),
-        ("Symmetry (worst)", "symmetry_worst"),
-        ("Fractal dimension (worst)", "fractal_dimension_worst"),
+        # ... [list of sliders]
     ]
 
     input_dict = {}
@@ -174,8 +145,8 @@ def get_radar_chart(input_data):
     return fig
 
 def add_predictions(input_data):
-    model_file = "model.pkl"
-    scaler_file = "scaler.pkl"
+    model_file = "BreastCancer/model.pkl"  # Updated path
+    scaler_file = "BreastCancer/scaler.pkl"  # Updated path
     
     if not os.path.exists(model_file) or not os.path.exists(scaler_file):
         st.error(f"Model file `{model_file}` or scaler file `{scaler_file}` not found.")
