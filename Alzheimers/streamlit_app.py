@@ -6,11 +6,10 @@ def main():
     st.title("Alzheimer's Prediction App")
 
     # Set up sidebar with image
-    side_banner_path = os.path.join(os.path.dirname(__file__), 'assets', 'images', 'side_banner.webp')
-    if os.path.isfile(side_banner_path):
-        st.sidebar.image(side_banner_path)
+    if os.path.isfile(SIDE_BANNER):
+        st.sidebar.image(SIDE_BANNER)
     else:
-        st.sidebar.error(f"Side banner image not found: {side_banner_path}")
+        st.sidebar.error(f"Side banner image not found: {SIDE_BANNER}")
 
     # Set the background image if available
     if os.path.isfile(BG_IMAGE):
@@ -30,6 +29,8 @@ def set_page_background(image_path):
             .stApp {{
                 background-image: url({image_path});
                 background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
             }}
             </style>
             """,
@@ -37,6 +38,10 @@ def set_page_background(image_path):
         )
     else:
         st.error(f"Background image not found: {image_path}")
+
+def home_page():
+    """Render the home page content."""
+    st.write("Welcome to the Alzheimer's Prediction App!")
 
 if __name__ == "__main__":
     main()
