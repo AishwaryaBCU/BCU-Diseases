@@ -51,9 +51,13 @@ The predictions provided by this system are for informational purposes only. Con
 # Function to load saved model
 @st.cache_data
 def load_model(model_file):
-    with open(model_file, 'rb') as f:
-        model = pickle.load(f)
-    return model
+    if os.path.exists(model_file):
+        with open(model_file, 'rb') as f:
+            model = pickle.load(f)
+        return model
+    else:
+        st.error(f"Model file '{model_file}' not found. Please ensure the file is in the correct directory.")
+        st.stop()
 
 # Load model
 heart_disease_model_path = 'heart_disease_model.sav'
