@@ -7,19 +7,15 @@ import os
 
 # Function to get cleaned data
 def get_clean_data():
-    data_path = "data.csv"  # Update path as needed
+    data_path = "BreastCancer/data.csv"
     if not os.path.exists(data_path):
-        st.error(f"File `{data_path}` not found.")
+        st.error(f"File {data_path} not found.")
         return pd.DataFrame()  # Return an empty DataFrame if file not found
 
-    try:
-        data = pd.read_csv(data_path)
-        data = data.drop(['Unnamed: 32', 'id'], axis=1)
-        data['diagnosis'] = data['diagnosis'].map({'M': 1, 'B': 0})
-        return data
-    except Exception as e:
-        st.error(f"Error reading the data file: {e}")
-        return pd.DataFrame()  # Return an empty DataFrame in case of error
+    data = pd.read_csv(data_path)
+    data = data.drop(['Unnamed: 32', 'id'], axis=1)
+    data['diagnosis'] = data['diagnosis'].map({'M': 1, 'B': 0})
+    return data
 
 # Function to add sidebar with input sliders
 def add_sidebar():
@@ -76,6 +72,7 @@ def add_sidebar():
             st.warning(f"Column `{key}` is missing from the data.")
             input_dict[key] = 0  # Default value or handle as appropriate
 
+    st.write("Sidebar input values:", input_dict)  # Debugging line
     return input_dict
 
 # Function to scale input values
@@ -100,12 +97,7 @@ def get_scaled_values(input_dict):
 
 # Function to get radar chart
 def get_radar_chart(input_data):
-    input_data = get_scaled_values(input_data)
-
-    categories = ['Radius', 'Texture', 'Perimeter', 'Area',
-                  'Smoothness', 'Compactness',
-                  'Concavity', 'Concave Points',
-                  'Symmetry', 'Fractal Dimension']
+    
 
     fig = go.Figure()
 
@@ -156,8 +148,8 @@ def get_radar_chart(input_data):
 
 # Function to add predictions
 def add_predictions(input_data):
-    model_file = "model.pkl"
-    scaler_file = "scaler.pkl"
+    model_file = "BreastCancer/model.pkl"
+    scaler_file = "BreastCancer/scaler.pkl"
 
     if not os.path.exists(model_file) or not os.path.exists(scaler_file):
         st.error(f"Model file `{model_file}` or scaler file `{scaler_file}` not found.")
@@ -169,6 +161,8 @@ def add_predictions(input_data):
     except Exception as e:
         st.error(f"Error loading model or scaler: {e}")
         return
+
+    st.write("Input Data for Prediction:", input_data)  # Debugging line
 
     try:
         input_array = np.array(list(input_data.values())).reshape(1, -1)
@@ -190,6 +184,18 @@ def add_predictions(input_data):
 def main():
     st.set_page_config(
         page_title="Breast Cancer Diagnosis",
+        layout="wide",
+        initial_sidebar_state="expanded"
+    )
+
+    input_data = add_sidebar()
+
+    if not input_data:
+        return  # Exit if no valid input data
+# Main function to run the app
+def main():
+    st.set_page_config(
+        page_title="Breast Cancer Diagnosis",
         page_icon="🔬",  # Medical icon
         layout="wide",
         initial_sidebar_state="expanded"
@@ -199,18 +205,13 @@ def main():
         """
         <style>
         .reportview-container {
-            background: url("bg.webp") no-repeat center center fixed;
+            background: url("BreastCancer/bg.webp") no-repeat center center fixed;
             background-size: cover;
         }
         </style>
         """,
         unsafe_allow_html=True
     )
-
-    input_data = add_sidebar()
-
-    if not input_data:
-        return  # Exit if no valid input data
 
     with st.container():
         st.title("Breast Cancer Diagnosis")
