@@ -41,7 +41,10 @@ def set_page_background(png_file):
 set_page_background(BACKGROUND)
 
 # STREAMLIT APP
-st.sidebar.image(SIDE_BANNER)
+try:
+    st.sidebar.image(SIDE_BANNER)
+except FileNotFoundError:
+    st.error("Side banner image file not found. Please ensure the file exists at 'assets/images/side_banner.webp'.")
 
 st.sidebar.title("Alzheimer's Prediction System")
 app_mode = st.sidebar.selectbox(
