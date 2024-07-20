@@ -33,7 +33,7 @@ def set_page_background(image_path):
         st.text(f"Contents of the current directory: {os.listdir(os.getcwd())}")
 
 # Set background image path
-background_image_path = 'bg.webp'
+background_image_path = 'heart/bg.webp'
 set_page_background(background_image_path)
 
 # Sidebar setup and content
@@ -60,7 +60,7 @@ def load_model(model_file):
         st.stop()
 
 # Load model
-heart_disease_model_path = 'heart_disease_model.sav'
+heart_disease_model_path = 'heart/heart_disease_model.sav'
 heart_disease_model = load_model(heart_disease_model_path)
 
 def show_heart_disease_prediction():
