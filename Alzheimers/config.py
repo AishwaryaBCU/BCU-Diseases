@@ -1,36 +1,14 @@
+import os
 import streamlit as st
 
-# Load CSS file
-CSS = ""
-try:
-    with open("assets/css/styles.css", 'r') as f:
-        CSS = f.read()
-except FileNotFoundError:
-    CSS = "/* Default styles */"
+# Define paths
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ASSETS_DIR = os.path.join(BASE_DIR, 'assets', 'images')
 
-# ASSETS
-BACKGROUND = "assets/images/bg.webp"
-DEFAULT_BACKGROUND = "assets/images/default.webp"
-BANNER = "assets/images/banner.webp"
-SIDE_BANNER = "assets/images/side_banner.webp"
-EMOJI = "assets/images/emo.webp"
+# Define image paths
+SIDE_BANNER = os.path.join(ASSETS_DIR, 'side_banner.webp')
+BG_IMAGE = os.path.join(ASSETS_DIR, 'bg.webp')
+DEFAULT_IMAGE = os.path.join(ASSETS_DIR, 'default.webp')
 
-# PREDICTION PAGE
-APOE_CATEGORIES = ['APOE Genotype_2,2', 'APOE Genotype_2,3', 'APOE Genotype_2,4', 
-                   'APOE Genotype_3,3', 'APOE Genotype_3,4', 'APOE Genotype_4,4']
-PTHETHCAT_CATEGORIES = ['PTETHCAT_Hisp/Latino', 'PTETHCAT_Not Hisp/Latino', 'PTETHCAT_Unknown']
-IMPUTED_CATEGORIES = ['imputed_genotype_True', 'imputed_genotype_False']
-PTRACCAT_CATEGORIES = ['PTRACCAT_Asian', 'PTRACCAT_Black', 'PTRACCAT_White']
-PTGENDER_CATEGORIES = ['PTGENDER_Female', 'PTGENDER_Male']
-APOE4_CATEGORIES = ['APOE4_0', 'APOE4_1', 'APOE4_2']
-ABBREVIATION = {
-    "AD": "Alzheimer's Disease",
-    "LMCI": "Late Mild Cognitive Impairment",
-    "CN": "Cognitively Normal"
-}
-
-CONDITION_DESCRIPTION = {
-    "AD": "This indicates that the individual's data aligns with characteristics commonly associated with Alzheimer's disease. Alzheimer's disease is a progressive neurodegenerative disorder that affects memory and cognitive functions.",
-    "LMCI": "This suggests that the individual is in a stage of mild cognitive impairment that is progressing towards Alzheimer's disease. Mild Cognitive Impairment is a transitional state between normal cognitive changes of aging and more significant cognitive decline.",
-    "CN": "This suggests that the individual has normal cognitive functioning without significant impairments. This group serves as a control for comparison in Alzheimer's research."
-}
+# Load secrets
+NEWS_API_KEY = st.secrets.get("NEWS_API", None)  # Ensure you handle missing secrets properly
