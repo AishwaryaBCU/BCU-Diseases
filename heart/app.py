@@ -6,7 +6,7 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 
 # Set page configuration
-st.set_page_config(page_title="Health Prediction System", page_icon="🩺", layout="wide")
+st.set_page_config(page_title="Heart Disease Prediction", page_icon="❤️", layout="wide")
 
 # Function to set background image
 def set_page_background(image_path):
@@ -33,11 +33,11 @@ def set_page_background(image_path):
         st.text(f"Contents of the current directory: {os.listdir(os.getcwd())}")
 
 # Set background image path
-background_image_path = 'heart/bg.webp'
+background_image_path = 'bg.webp'
 set_page_background(background_image_path)
 
 # Sidebar setup and content
-st.sidebar.title("Health Prediction System")
+st.sidebar.title("Heart Disease Prediction")
 app_mode = st.sidebar.selectbox(
     "Please navigate through the different sections",
     ["Home", "Heart Disease Prediction", "Disclaimer"]
@@ -99,7 +99,7 @@ def show_heart_disease_prediction():
 
 def main():
     if app_mode == "Home":
-        st.title("Welcome to Health Prediction System")
+        st.title("Welcome to Heart Disease Prediction System")
         st.write("""
         ## About the System
         This system provides a tool for predicting heart disease risk using a machine learning model. Use the sidebar to navigate to the prediction section.
