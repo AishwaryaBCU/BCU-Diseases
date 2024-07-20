@@ -4,20 +4,22 @@ import pandas as pd
 import plotly.graph_objects as go
 import numpy as np
 import base64
+import os
 
 # Function to get the data
 def get_clean_data():
-    try:
-        data = pd.read_csv("data.csv")
-        st.write("Data columns:", data.columns)  # Diagnostic output
-    except FileNotFoundError:
-        st.error("The file `data.csv` was not found. Please ensure it is in the correct directory.")
+    data_file = "data.csv"  # Adjust path if needed
+    if not os.path.exists(data_file):
+        st.error(f"File `{data_file}` was not found. Please ensure it is in the correct directory.")
         return pd.DataFrame()  # Return an empty DataFrame or handle as needed
+    
+    data = pd.read_csv(data_file)
+    st.write("Data columns:", data.columns)  # Diagnostic output
 
     try:
         data = data.drop(['Unnamed: 32', 'id'], axis=1)
     except KeyError as e:
-        st.error(f"Column error: {e}. Please check the column names in `data.csv`.")
+        st.error(f"Column error: {e}. Please check the column names in `{data_file}`.")
         return pd.DataFrame()  # Return an empty DataFrame or handle as needed
 
     data['diagnosis'] = data['diagnosis'].map({'M': 1, 'B': 0})
@@ -25,23 +27,25 @@ def get_clean_data():
 
 # Function to add background image
 def add_background_image():
-    try:
-        with open("bg.webp", "rb") as image_file:
-            encoded_image = base64.b64encode(image_file.read()).decode()
-            st.markdown(
-                f"""
-                <style>
-                .stApp {{
-                    background-image: url("data:image/webp;base64,{encoded_image}");
-                    background-size: cover;
-                    background-position: center;
-                }}
-                </style>
-                """,
-                unsafe_allow_html=True
-            )
-    except FileNotFoundError:
-        st.error("Background image file `bg.webp` not found.")
+    bg_image_file = "bg.webp"  # Adjust path if needed
+    if not os.path.exists(bg_image_file):
+        st.error(f"Background image file `{bg_image_file}` not found.")
+        return
+
+    with open(bg_image_file, "rb") as image_file:
+        encoded_image = base64.b64encode(image_file.read()).decode()
+        st.markdown(
+            f"""
+            <style>
+            .stApp {{
+                background-image: url("data:image/webp;base64,{encoded_image}");
+                background-size: cover;
+                background-position: center;
+            }}
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
 
 # Function to add sidebar with sliders
 def add_sidebar():
@@ -93,7 +97,7 @@ def add_sidebar():
                 value=float(data[key].mean())
             )
         else:
-            st.warning(f"Column `{key}` is missing from `data.csv`.")
+            st.warning(f"Column `{key}` is missing from `{data_file}`.")
 
     return input_dict
 
@@ -168,21 +172,30 @@ def get_radar_chart(input_data):
 
 # Function to add predictions
 def add_predictions(input_data):
+    model_file = "model.pkl"  # Adjust path if needed
+    scaler_file = "scaler.pkl"  # Adjust path if needed
+    
+    if not os.path.exists(model_file) or not os.path.exists(scaler_file):
+        st.error(f"Model file `{model_file}` or scaler file `{scaler_file}` not found.")
+        return
+
     try:
-        model = pickle.load(open("model.pkl", "rb"))
-        scaler = pickle.load(open("scaler.pkl", "rb"))
-    except FileNotFoundError:
-        st.error("Model or scaler files not found.")
+        model = pickle.load(open(model_file, "rb"))
+        scaler = pickle.load(open(scaler_file, "rb"))
+    except Exception as e:
+        st.error(f"Error loading model or scaler: {e}")
         return
 
     input_array = np.array(list(input_data.values())).reshape(1, -1)
     input_array_scaled = scaler.transform(input_array)
     prediction = model.predict(input_array_scaled)
+
     st.write("The predicted cell cluster is:")
     if prediction[0] == 0:
         st.write("Benign", unsafe_allow_html=True)
     else:
         st.write("Malicious", unsafe_allow_html=True)
+
     st.write("Probability of Benign: ", model.predict_proba(input_array_scaled)[0][0])
     st.write("Probability of Malicious: ", model.predict_proba(input_array_scaled)[0][1])
 
@@ -193,6 +206,7 @@ def main():
         layout="wide",
         initial_sidebar_state="expanded"
     )
+
     add_background_image()
     input_data = add_sidebar()
     if input_data:
