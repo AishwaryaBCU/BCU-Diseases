@@ -51,7 +51,7 @@ if SIDE_BANNER:
 st.sidebar.title("Alzheimer's Prediction System")
 app_mode = st.sidebar.selectbox(
     "Please navigate through the different sections of our website from here",
-    ["Home", "Predict Alzheimer's", "ChatBot", "Latest News", "Team Members"],
+    ["Home", "Predict Alzheimer's"],
 )
 
 st.sidebar.write("""
