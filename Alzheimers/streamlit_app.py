@@ -4,12 +4,9 @@ import base64
 
 # SETTING PAGE CONFIG
 st.set_page_config(
-    page_title="Alzheimer's Prediction Systems",
+    page_title="Alzheimer's Prediction System",
     page_icon=":brain:",
 )
-
-# Print current working directory
-st.write("Current working directory:", os.getcwd())
 
 # Define paths using absolute paths
 base_path = os.path.dirname(os.path.abspath(__file__))
@@ -17,11 +14,8 @@ bg_image_path = os.path.join(base_path, 'assets', 'images', 'bg.webp')
 default_image_path = os.path.join(base_path, 'assets', 'images', 'default.webp')
 side_banner_path = os.path.join(base_path, 'assets', 'images', 'side_banner.webp')
 
-
-# Check if images exist
-
-
-def set_page_background(png_file):
+# Function to set page background
+def set_page_background(image_path):
     @st.cache_data()
     def get_base64_of_bin_file(bin_file):
         try:
@@ -32,18 +26,19 @@ def set_page_background(png_file):
             st.error(f"Background image file not found: {bin_file}")
             return None
     
-    bin_str = get_base64_of_bin_file(png_file)
+    bin_str = get_base64_of_bin_file(image_path)
     if bin_str:
         page_bg_img = f'''
             <style>
             .stApp {{
-                background-image: url("data:image/png;base64,{bin_str}");
+                background-image: url("data:image/webp;base64,{bin_str}");
+                background-size: cover;
             }}
             </style>
         '''
         st.markdown(page_bg_img, unsafe_allow_html=True)
 
-# Try setting the page background with the absolute path
+# Set background
 set_page_background(bg_image_path)
 
 # STREAMLIT APP
