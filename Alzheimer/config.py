@@ -1,14 +1,22 @@
+import os
 import streamlit as st
 
+# Define base path
+base_path = os.path.dirname(os.path.abspath(__file__))
+
 # PAGE CONFIG
-CSS = open("assets/css/styles.css", 'r').read()
+try:
+    with open(os.path.join(base_path, 'assets', 'css', 'styles.css'), 'r') as file:
+        CSS = file.read()
+except FileNotFoundError:
+    CSS = ''  # Handle missing CSS file gracefully
 
 # ASSETS
-BACKGROUND = "assets/images/bg.webp"
-BANNER = "assets/images/banner.webp"
-DEFAULT_IMAGE = "assets/images/default.webp"
-SIDE_BANNER = "assets/images/side_banner.webp"
-EMOJI = "assets/images/emo.webp"
+BACKGROUND = os.path.join(base_path, 'assets', 'images', 'bg.webp')
+BANNER = os.path.join(base_path, 'assets', 'images', 'banner.webp')
+DEFAULT_IMAGE = os.path.join(base_path, 'assets', 'images', 'default.webp')
+SIDE_BANNER = os.path.join(base_path, 'assets', 'images', 'side_banner.webp')
+EMOJI = os.path.join(base_path, 'assets', 'images', 'emo.webp')
 
 # PREDICTION PAGE
 APOE_CATEGORIES = ['APOE Genotype_2,2', 'APOE Genotype_2,3', 'APOE Genotype_2,4', 
@@ -30,7 +38,7 @@ CONDITION_DESCRIPTION = {
         "memory and cognitive functions.",
     "LMCI": "This suggests that the individual is in a stage of mild cognitive impairment that is progressing "
             "towards Alzheimer's disease. Mild Cognitive Impairment is a transitional state between normal "
-            "cognitive changes of aging a   nd more significant cognitive decline.",
+            "cognitive changes of aging and more significant cognitive decline.",
     "CN": "This suggests that the individual has normal cognitive functioning without significant impairments. "
         "This group serves as a control for comparison in Alzheimer's research."
 }
@@ -39,12 +47,10 @@ CONDITION_DESCRIPTION = {
 NEWS_API_KEY = st.secrets["NEWS_API"]
 KEYWORD = "alzheimer"
 
-
 # CHATBOT PAGE
 HF_EMAIL = st.secrets['HF_GMAIL']
 HF_PASS = st.secrets['HF_PASS']    
 BASE_PROMPT = st.secrets['BASE_PROMPT']
-
 
 # TEAM MEMBERS PAGE
 TEAM_MEMBERS = [
@@ -52,5 +58,5 @@ TEAM_MEMBERS = [
     {"name": "Aditya Bhardwaj", "role": "Developer", "links":["https://www.linkedin.com/in/aditya-bhardwaj-3a6437232/", "https://github.com/adityabhardwajjj"]},
     {"name": "Harshit Jain", "role": "Developer", "links":["https://www.linkedin.com/in/harshitjainnn/", "https://github.com/HarshitJainn"]},
     {"name": "Siddharth Mohril", "role": "Developer", "links":["https://www.linkedin.com/in/siddharth-mohril-361678250/", "https://github.com/siddharth-mohril"]},
-    {"name": "Aditya Jain", "role": "Developer", "links":["https://www.linkedin.com/in/chimpyaj/", "https://github.com/ajhasbeensummoned"]},
+    {"name": "Aditya Jain", "role": "Developer", "links":["https://www.linkedin.com/in/chimpyaj/", "https://github.com/ajhasbeensummoned"]}
 ]
