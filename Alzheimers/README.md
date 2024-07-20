@@ -79,24 +79,8 @@ The final Alzheimer's predcition model is deployed on the following platforms:
 - Streamlit Share : [Visit Site](https://alzheimers-prediction.streamlit.app)
 - HuggingFace Spaces: [Visit Site](https://huggingface.co/spaces/arpy8/Alzheimers_Prediction_Clinical_Data)
 
-### Team
-<table style="width: 100%; border-collapse: collapse; text-align:center;">
-        <tr>
-            <th><a href="https://github.com/arpy8">Arpit Sengar</a></th>
-            <th><a href="https://github.com/siddharth-mohril">Siddharth Mohril</a></th>
-            <th><a href="https://github.com/adityabhardwajjj">Aditya Bhardwaj</a></th>
-            <th><a href="https://github.com/harshitjainn">Harshit Jain</a></th>
-            <th><a href="https://github.com/ajhasbeensummoned">Aditya Jain</a></th>
-        </tr>
-        <tr>
-            <td><img src="https://avatars.githubusercontent.com/arpy8" alt="Arpit Sengar"></td>
-            <td><img src="https://avatars.githubusercontent.com/siddharth-mohril" alt="Siddharth Mohril"></td>
-            <td><img src="https://avatars.githubusercontent.com/adityabhardwajjj" alt="Aditya Bhardwaj"></td>
-            <td><img src="https://avatars.githubusercontent.com/harshitjainn" alt="Harshit Jain"></td>
-            <td><img src="https://avatars.githubusercontent.com/ajhasbeensummoned" alt="Aditya Jain"></td>
-        </tr>
-</table>
+
 
 ---
 
-Feel free to reach out to us at [arpitsengar99@gmail.com](mailto:arpitsengar99@gmail.com) for any questions or support related to this system. I hope this prediction system proves to be a valuable tool in understanding and predicting Alzheimer's disease.
+Feel free to reach out to us at [aishwarya21824@gmail.com](mailto:aishwarya21824@gmail.com) for any questions or support related to this system. I hope this prediction system proves to be a valuable tool in understanding and predicting Alzheimer's disease.
