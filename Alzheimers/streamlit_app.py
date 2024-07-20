@@ -16,7 +16,7 @@ try:
 except NameError:
     st.error("CSS content not found. Ensure the file path is correct in the config.py.")
 
-def set_page_background(png_file):
+def set_page_background(png_file, default_file):
     @st.cache_data()
     def get_base64_of_bin_file(bin_file):
         try:
@@ -28,6 +28,9 @@ def set_page_background(png_file):
             return None
     
     bin_str = get_base64_of_bin_file(png_file)
+    if not bin_str:
+        bin_str = get_base64_of_bin_file(default_file)
+    
     if bin_str:
         page_bg_img = f'''
             <style>
@@ -38,13 +41,13 @@ def set_page_background(png_file):
         '''
         st.markdown(page_bg_img, unsafe_allow_html=True)
 
-set_page_background(BACKGROUND)
+set_page_background(BACKGROUND, DEFAULT_BACKGROUND)
 
 # STREAMLIT APP
 try:
     st.sidebar.image(SIDE_BANNER)
 except FileNotFoundError:
-    st.error("Side banner image file not found. Please ensure the file exists at 'assets/images/side_banner.webp'.")
+    st.sidebar.image(DEFAULT_SIDE_BANNER)
 
 st.sidebar.title("Alzheimer's Prediction System")
 app_mode = st.sidebar.selectbox(
