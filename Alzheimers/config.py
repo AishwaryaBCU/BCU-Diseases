@@ -24,6 +24,10 @@ DEFAULT_IMAGE = "assets/images/default.webp"
 SIDE_BANNER = "assets/images/side_banner.webp"
 EMOJI = "assets/images/emo.webp"
 
+# Default image paths
+DEFAULT_BACKGROUND = "path/to/default_background.webp"
+DEFAULT_SIDE_BANNER = "path/to/default_side_banner.webp"
+
 # Prediction page categories
 APOE_CATEGORIES = [
     'APOE Genotype_2,2', 'APOE Genotype_2,3', 'APOE Genotype_2,4', 
@@ -59,57 +63,3 @@ CONDITION_DESCRIPTION = {
         "This group serves as a control for comparison in Alzheimer's research."
     )
 }
-
-# News page configuration
-NEWS_API_KEY = st.secrets.get("NEWS_API", None)
-if not NEWS_API_KEY:
-    st.warning("NEWS_API key not found in secrets. News functionality will be limited.")
-
-# Chatbot page configuration
-HF_EMAIL = st.secrets.get('HF_GMAIL', None)
-HF_PASS = st.secrets.get('HF_PASS', None)
-BASE_PROMPT = st.secrets.get('BASE_PROMPT', "Hello, how can I assist you today?")
-
-# Team members
-TEAM_MEMBERS = [
-    {
-        "name": "Arpit Sengar", 
-        "role": "Developer", 
-        "links": [
-            "https://www.linkedin.com/in/arpitsengar", 
-            "https://github.com/arpy8"
-        ]
-    },
-    {
-        "name": "Aditya Bhardwaj", 
-        "role": "Developer", 
-        "links": [
-            "https://www.linkedin.com/in/aditya-bhardwaj-3a6437232/", 
-            "https://github.com/adityabhardwajjj"
-        ]
-    },
-    {
-        "name": "Harshit Jain", 
-        "role": "Developer", 
-        "links": [
-            "https://www.linkedin.com/in/harshitjainnn/", 
-            "https://github.com/HarshitJainn"
-        ]
-    },
-    {
-        "name": "Siddharth Mohril", 
-        "role": "Developer", 
-        "links": [
-            "https://www.linkedin.com/in/siddharth-mohril-361678250/", 
-            "https://github.com/siddharth-mohril"
-        ]
-    },
-    {
-        "name": "Aditya Jain", 
-        "role": "Developer", 
-        "links": [
-            "https://www.linkedin.com/in/chimpyaj/", 
-            "https://github.com/ajhasbeensummoned"
-        ]
-    }
-]
