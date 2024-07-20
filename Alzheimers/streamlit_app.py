@@ -17,25 +17,9 @@ bg_image_path = os.path.join(base_path, 'assets', 'images', 'bg.webp')
 default_image_path = os.path.join(base_path, 'assets', 'images', 'default.webp')
 side_banner_path = os.path.join(base_path, 'assets', 'images', 'side_banner.webp')
 
-# List files in the assets/images directory
-files = os.listdir(os.path.join(base_path, 'assets', 'images'))
-st.write("Files in 'assets/images' directory:", files)
 
 # Check if images exist
-if os.path.isfile(bg_image_path):
-    st.write(f"Background image found: {bg_image_path}")
-else:
-    st.error(f"Background image not found: {bg_image_path}")
 
-if os.path.isfile(default_image_path):
-    st.write(f"Default image found: {default_image_path}")
-else:
-    st.error(f"Default image not found: {default_image_path}")
-
-if os.path.isfile(side_banner_path):
-    st.write(f"Side banner image found: {side_banner_path}")
-else:
-    st.error(f"Side banner image not found: {side_banner_path}")
 
 def set_page_background(png_file):
     @st.cache_data()
