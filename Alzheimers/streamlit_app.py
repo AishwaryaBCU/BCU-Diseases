@@ -1,47 +1,92 @@
 import os
 import streamlit as st
-from config import SIDE_BANNER, BG_IMAGE, DEFAULT_IMAGE
+import base64
 
-def main():
-    st.title("Alzheimer's Prediction App")
+# SETTING PAGE CONFIG
+st.set_page_config(
+    page_title="Alzheimer's Prediction Systems",
+    page_icon=":brain:",
+)
 
-    # Set up sidebar with image
-    if os.path.isfile(SIDE_BANNER):
-        st.sidebar.image(SIDE_BANNER)
-    else:
-        st.sidebar.error(f"Side banner image not found: {SIDE_BANNER}")
+# Print current working directory
+st.write("Current working directory:", os.getcwd())
 
-    # Set the background image if available
-    if os.path.isfile(BG_IMAGE):
-        set_page_background(BG_IMAGE)
-    else:
-        st.error(f"Background image not found: {BG_IMAGE}")
+# Define paths using absolute paths
+base_path = os.path.dirname(os.path.abspath(__file__))
+bg_image_path = os.path.join(base_path, 'assets', 'images', 'bg.webp')
+default_image_path = os.path.join(base_path, 'assets', 'images', 'default.webp')
+side_banner_path = os.path.join(base_path, 'assets', 'images', 'side_banner.webp')
 
-    # Call the home page function
-    home_page()
+# List files in the assets/images directory
+files = os.listdir(os.path.join(base_path, 'assets', 'images'))
+st.write("Files in 'assets/images' directory:", files)
 
-def set_page_background(image_path):
-    """Set the background image of the Streamlit page."""
-    if os.path.isfile(image_path):
-        st.markdown(
-            f"""
+# Check if images exist
+if os.path.isfile(bg_image_path):
+    st.write(f"Background image found: {bg_image_path}")
+else:
+    st.error(f"Background image not found: {bg_image_path}")
+
+if os.path.isfile(default_image_path):
+    st.write(f"Default image found: {default_image_path}")
+else:
+    st.error(f"Default image not found: {default_image_path}")
+
+if os.path.isfile(side_banner_path):
+    st.write(f"Side banner image found: {side_banner_path}")
+else:
+    st.error(f"Side banner image not found: {side_banner_path}")
+
+def set_page_background(png_file):
+    @st.cache_data()
+    def get_base64_of_bin_file(bin_file):
+        try:
+            with open(bin_file, 'rb') as f:
+                data = f.read()
+            return base64.b64encode(data).decode()
+        except FileNotFoundError:
+            st.error(f"Background image file not found: {bin_file}")
+            return None
+    
+    bin_str = get_base64_of_bin_file(png_file)
+    if bin_str:
+        page_bg_img = f'''
             <style>
             .stApp {{
-                background-image: url({image_path});
-                background-size: cover;
-                background-position: center;
-                background-repeat: no-repeat;
+                background-image: url("data:image/png;base64,{bin_str}");
             }}
             </style>
-            """,
-            unsafe_allow_html=True
-        )
-    else:
-        st.error(f"Background image not found: {image_path}")
+        '''
+        st.markdown(page_bg_img, unsafe_allow_html=True)
 
-def home_page():
-    """Render the home page content."""
-    st.write("Welcome to the Alzheimer's Prediction App!")
+# Try setting the page background with the absolute path
+set_page_background(bg_image_path)
+
+# STREAMLIT APP
+if os.path.isfile(side_banner_path):
+    st.sidebar.image(side_banner_path)
+
+st.sidebar.title("Alzheimer's Prediction System")
+app_mode = st.sidebar.selectbox(
+    "Please navigate through the different sections of our website from here",
+    ["Home", "Predict Alzheimer's"],
+)
+
+st.sidebar.write("""
+# Disclaimer
+The predictions provided by this system are for informational purposes only. Consult a healthcare professional for accurate diagnosis and advice.
+
+# Contact
+For inquiries, you can mail us [here](mailto:aishwarya21824@gmail.com).
+""")
+
+def main():
+    if app_mode == "Home":
+        from streamlit_pages._home_page import home_page
+        home_page()
+    elif app_mode == "Predict Alzheimer's":
+        from streamlit_pages._predict_alzheimer import prediction_page
+        prediction_page()
 
 if __name__ == "__main__":
     main()
