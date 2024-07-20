@@ -4,13 +4,13 @@ import pandas as pd
 import plotly.graph_objects as go
 import numpy as np
 import os
+import base64
 
-# Function to get the data
 def get_clean_data():
     data_file = "data.csv"
     if not os.path.exists(data_file):
         st.error(f"File `{data_file}` not found. Please ensure it is in the correct directory.")
-        return pd.DataFrame()  # Return an empty DataFrame or handle as needed
+        return pd.DataFrame()
     
     try:
         data = pd.read_csv(data_file)
@@ -27,7 +27,6 @@ def get_clean_data():
     data['diagnosis'] = data['diagnosis'].map({'M': 1, 'B': 0})
     return data
 
-# Function to add background image
 def add_background_image():
     bg_image_file = "bg.webp"
     if not os.path.exists(bg_image_file):
@@ -52,7 +51,6 @@ def add_background_image():
     except Exception as e:
         st.error(f"Error loading background image `{bg_image_file}`: {e}")
 
-# Function to add sidebar with sliders
 def add_sidebar():
     st.sidebar.header("Cell Nuclei Measurements")
     data = get_clean_data()
@@ -103,11 +101,10 @@ def add_sidebar():
             )
         else:
             st.warning(f"Column `{key}` is missing from `{data_file}`.")
-            input_dict[key] = 0  # Default value if column is missing
+            input_dict[key] = 0
 
     return input_dict
 
-# Function to scale the input values
 def get_scaled_values(input_dict):
     data = get_clean_data()
     if data.empty:
@@ -123,11 +120,10 @@ def get_scaled_values(input_dict):
             scaled_dict[key] = scaled_value
         else:
             st.warning(f"Column `{key}` is missing for scaling.")
-            scaled_dict[key] = 0  # Default value if column is missing
+            scaled_dict[key] = 0
 
     return scaled_dict
 
-# Function to create radar chart
 def get_radar_chart(input_data):
     input_data = get_scaled_values(input_data)
     categories = ['Radius', 'Texture', 'Perimeter', 'Area', 
@@ -177,7 +173,6 @@ def get_radar_chart(input_data):
     )
     return fig
 
-# Function to add predictions
 def add_predictions(input_data):
     model_file = "model.pkl"
     scaler_file = "scaler.pkl"
@@ -206,13 +201,22 @@ def add_predictions(input_data):
     st.write("Probability of Benign: ", model.predict_proba(input_array_scaled)[0][0])
     st.write("Probability of Malicious: ", model.predict_proba(input_array_scaled)[0][1])
 
-# Main function
+def list_files_in_directory():
+    cwd = os.getcwd()
+    st.write(f"Current working directory: `{cwd}`")
+    files = os.listdir(cwd)
+    st.write("Files in the current directory:")
+    st.write(files)
+
 def main():
     st.set_page_config(
         page_title="Breast Cancer Diagnosis",
         layout="wide",
         initial_sidebar_state="expanded"
     )
+
+    # Display the current working directory and list files
+    list_files_in_directory()
 
     add_background_image()
     input_data = add_sidebar()
