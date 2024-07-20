@@ -6,7 +6,7 @@ from streamlit_pages._predict_alzheimer import prediction_page
 
 # SETTING PAGE CONFIG
 st.set_page_config(
-    page_title="Alzheimer's Prediction Systems",
+    page_title="Alzheimer's Prediction System",
     page_icon=":brain:",
 )
 
@@ -24,13 +24,11 @@ def set_page_background(png_file, default_file):
                 data = f.read()
             return base64.b64encode(data).decode()
         except FileNotFoundError:
-            st.error(f"Background image file not found: {bin_file}")
             return None
     
     bin_str = get_base64_of_bin_file(png_file)
     if not bin_str:
         bin_str = get_base64_of_bin_file(default_file)
-    
     if bin_str:
         page_bg_img = f'''
             <style>
@@ -40,6 +38,8 @@ def set_page_background(png_file, default_file):
             </style>
         '''
         st.markdown(page_bg_img, unsafe_allow_html=True)
+    else:
+        st.error(f"Background image file not found: {png_file} and default file not found.")
 
 set_page_background(BACKGROUND, DEFAULT_BACKGROUND)
 
@@ -47,7 +47,7 @@ set_page_background(BACKGROUND, DEFAULT_BACKGROUND)
 try:
     st.sidebar.image(SIDE_BANNER)
 except FileNotFoundError:
-    st.sidebar.image(DEFAULT_SIDE_BANNER)
+    st.sidebar.error(f"Side banner image file not found: {SIDE_BANNER}")
 
 st.sidebar.title("Alzheimer's Prediction System")
 app_mode = st.sidebar.selectbox(
@@ -66,7 +66,7 @@ For inquiries, you can mail us [here](mailto:aishwarya21824@gmail.com).
 def main():
     if app_mode == "Home":
         home_page()
-    if app_mode == "Predict Alzheimer's":
+    elif app_mode == "Predict Alzheimer's":
         prediction_page()
 
 if __name__ == "__main__":
