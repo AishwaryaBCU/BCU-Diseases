@@ -34,6 +34,7 @@ def set_page_background(png_file, default_file):
             <style>
             .stApp {{
                 background-image: url("data:image/png;base64,{bin_str}");
+                background-size: cover;
             }}
             </style>
         '''
