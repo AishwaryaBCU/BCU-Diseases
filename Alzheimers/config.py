@@ -6,7 +6,7 @@ try:
     with open("assets/css/styles.css", 'r') as css_file:
         CSS = css_file.read()
 except FileNotFoundError:
-    st.error("CSS file not found. Please ensure 'assets/css/styles.css' exists.")
+    st.warning("CSS file not found. Using default styles.")
     CSS = """
     /* Default CSS in case the file is not found */
     body {
@@ -16,7 +16,6 @@ except FileNotFoundError:
         background-color: #f0f0f0;
     }
     """
-    st.markdown("CSS file not found. Using default styles.")
 
 # Assets paths
 BACKGROUND = "assets/images/bg.webp"
@@ -62,13 +61,14 @@ CONDITION_DESCRIPTION = {
 }
 
 # News page configuration
-NEWS_API_KEY = st.secrets["NEWS_API"]
-KEYWORD = "alzheimer"
+NEWS_API_KEY = st.secrets.get("NEWS_API", None)
+if not NEWS_API_KEY:
+    st.warning("NEWS_API key not found in secrets. News functionality will be limited.")
 
 # Chatbot page configuration
-HF_EMAIL = st.secrets['HF_GMAIL']
-HF_PASS = st.secrets['HF_PASS']
-BASE_PROMPT = st.secrets['BASE_PROMPT']
+HF_EMAIL = st.secrets.get('HF_GMAIL', None)
+HF_PASS = st.secrets.get('HF_PASS', None)
+BASE_PROMPT = st.secrets.get('BASE_PROMPT', "Hello, how can I assist you today?")
 
 # Team members
 TEAM_MEMBERS = [
@@ -113,4 +113,3 @@ TEAM_MEMBERS = [
         ]
     }
 ]
-
