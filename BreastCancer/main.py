@@ -72,7 +72,8 @@ def add_sidebar():
             st.warning(f"Column `{key}` is missing from the data.")
             input_dict[key] = 0  # Default value or handle as appropriate
 
-  
+    st.read("Sidebar input values:", input_dict)  # Debugging line
+    return input_dict
 
 # Function to scale input values
 def get_scaled_values(input_dict):
@@ -165,7 +166,7 @@ def add_predictions(input_data):
         st.error(f"Error loading model or scaler: {e}")
         return
 
-   
+    st.read("Input Data for Prediction:", input_data)  # Debugging line
 
     try:
         input_array = np.array(list(input_data.values())).reshape(1, -1)
@@ -187,8 +188,8 @@ def add_predictions(input_data):
 def main():
     st.set_page_config(
         page_title="Breast Cancer Diagnosis",
-         page_icon="🔬",
         layout="wide",
+        page_icon="🔬",
         initial_sidebar_state="expanded"
     )
 
@@ -199,7 +200,6 @@ def main():
 
     with st.container():
         st.title("Breast Cancer Diagnosis")
-        
         st.write("This app predicts using a machine learning model whether a breast mass is benign or malignant based on the measurements it receives from your cytosis lab. You can also update the measurements by hand using the sliders in the sidebar.")
 
     col1, col2 = st.columns([4, 1])
