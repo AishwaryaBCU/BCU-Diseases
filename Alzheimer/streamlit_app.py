@@ -3,9 +3,7 @@ import streamlit as st
 from config import *
 from streamlit_pages._home_page import home_page
 from streamlit_pages._predict_alzheimer import prediction_page
-from streamlit_pages._latest_news import news_page
-from streamlit_pages._team_members import team_members  
-from streamlit_pages._chat_page import chat_bot
+
 
 # SETTING PAGE CONFIG
 st.set_page_config(
