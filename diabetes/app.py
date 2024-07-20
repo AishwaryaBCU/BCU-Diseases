@@ -11,7 +11,7 @@ st.set_page_config(
 
 # Function to set background image
 def set_page_background(image_path):
-    @st.cache(suppress_st_warning=True)
+    @st.cache_data()
     def get_base64_of_bin_file(filename):
         with open(filename, 'rb') as f:
             data = f.read()
@@ -25,6 +25,7 @@ def set_page_background(image_path):
             .stApp {{
                 background-image: url("data:image/jpg;base64,{bin_str}");
                 background-size: cover;
+                background-position: center;
             }}
             </style>
         '''
@@ -41,6 +42,26 @@ background_image_path = 'diabetes/background.jpg'
 # Set background image
 set_page_background(background_image_path)
 
+# Custom CSS for sidebar transparency and other styles
+st.markdown("""
+    <style>
+    /* Transparent sidebar background */
+    .css-1d391kg {
+        background-color: rgba(0, 0, 0, 0.5) !important;
+    }
+
+    /* Sidebar text color */
+    .css-1d391kg, .css-1k1w8b0 {
+        color: #FFFFFF;
+    }
+
+    /* Make sidebar items more readable */
+    .css-1d391kg a {
+        color: #FFFFFF;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 # Sidebar setup and content
 st.sidebar.title("Diabetes Prediction System")
 app_mode = st.sidebar.selectbox(
@@ -54,7 +75,7 @@ The predictions provided by this system are for informational purposes only. Con
 """)
 
 # Function to load saved model
-@st.cache(allow_output_mutation=True)
+@st.cache_data(allow_output_mutation=True)
 def load_model(model_file):
     with open(model_file, 'rb') as f:
         model = pickle.load(f)
@@ -130,5 +151,4 @@ if __name__ == "__main__":
     working_dir = os.path.dirname(os.path.abspath(__file__))
     model_file_path = os.path.join(working_dir, 'diabetes_model.sav')
     diabetes_model = load_model(model_file_path)
-    
     main()
