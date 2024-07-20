@@ -59,7 +59,7 @@ st.sidebar.write("""
 The predictions provided by this system are for informational purposes only. Consult a healthcare professional for accurate diagnosis and advice.
 
 # Contact
-For inquiries, you can mail us [here](mailto:arpitsengar99@gmail.com).
+For inquiries, you can mail us [here](mailto:aishwarya21824@gmail.com).
 """)
 
 def main():
