@@ -101,11 +101,29 @@ def main():
     if app_mode == "Home":
         st.title("Welcome to Heart Disease Prediction System")
         st.write("""
-        ## About the System
-        This system provides a tool for predicting heart disease risk using a machine learning model. Use the sidebar to navigate to the prediction section.
+        ## About Heart Disease
+        Heart disease describes a range of conditions that affect your heart. These diseases include blood vessel diseases, such as coronary artery disease, heart rhythm problems (arrhythmias), and heart defects you're born with (congenital heart defects), among others.
 
-        ### Disclaimer
-        The predictions provided by this system are for informational purposes only and are not a substitute for professional medical advice. Consult a healthcare professional for accurate diagnosis and advice.
+        ## Machine Learning Project
+        This heart disease prediction tool is developed using machine learning techniques to predict the likelihood of heart disease in individuals based on various health parameters. The model is trained on the Cleveland Heart Disease Dataset, which includes parameters such as:
+        - Age
+        - Resting Blood Pressure
+        - Resting Electrocardiographic results
+        - ST depression induced by exercise
+        - Thalassemia (thal): 0 = normal; 1 = fixed defect; 2 = reversible defect
+        - Sex
+        - Serum Cholesterol in mg/dl
+        - Maximum Heart Rate achieved
+        - Slope of the peak exercise ST segment
+        - Chest Pain types
+        - Fasting Blood Sugar > 120 mg/dl
+        - Exercise Induced Angina
+        - Major vessels colored by fluoroscopy
+
+        ### Model Accuracy
+        The machine learning model used in this project achieves an accuracy of approximately 85% on the test dataset. This means that the model is able to correctly predict heart disease 85% of the time based on the given health parameters.
+
+        ## Go to Online Predictor
         """)
     elif app_mode == "Heart Disease Prediction":
         show_heart_disease_prediction()
