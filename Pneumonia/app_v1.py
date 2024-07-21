@@ -19,8 +19,11 @@ def Ho():
     st.write(":grey[Web App for PNEUMonia PREDICTion using X-ray image classifications]")
 
     home_img_path = os.path.join(current_dir, 'web_img', 'home.jpg')
-    home_img = Image.open(home_img_path)
-    st.image(home_img, width=800)
+    if not os.path.exists(home_img_path):
+        st.error(f"File not found: {home_img_path}")
+    else:
+        home_img = Image.open(home_img_path)
+        st.image(home_img, width=800)
 
 def Ab():
     st.header(':red[What is Pneumonia?]')
@@ -32,11 +35,17 @@ def Ap():
     @st.cache_data
     def load_model():
         model_path = os.path.join(current_dir, 'xray_model_80-20.h5')
+        if not os.path.exists(model_path):
+            st.error(f"Model file not found: {model_path}")
+            return None
         model = tf.keras.models.load_model(model_path)
         return model
 
     with st.spinner('Please wait, while the model is being loaded..'):
         model = load_model()
+        if model is None:
+            st.error("Failed to load the model. Please check the file path and try again.")
+            return
 
     def main():
         st.header(":red[Pneumonia prediction using _Pneumpredict_]")
@@ -50,8 +59,11 @@ def Ap():
         st.subheader("Please upload an X-ray image using the browse button :point_up:")
         st.write("Sample images can be found [here](https://github.com/sabahuddinahmad/Pneumpredict/tree/main/sample_images)!")
         compared_img_path = os.path.join(current_dir, 'web_img', 'compared.JPG')
-        image1 = Image.open(compared_img_path)
-        st.image(image1, use_column_width=True)
+        if not os.path.exists(compared_img_path):
+            st.error(f"File not found: {compared_img_path}")
+        else:
+            image1 = Image.open(compared_img_path)
+            st.image(image1, use_column_width=True)
     else:
         st.subheader("Thank you for uploading X-ray image!")
         with st.spinner('_Pneumpredict_ is now processing your image.......'):
@@ -79,8 +91,11 @@ def Ap():
 
 def Di():
     disclaimer_img_path = os.path.join(current_dir, 'web_img', 'disclaimer.JPG')
-    image2 = Image.open(disclaimer_img_path)
-    st.image(image2, use_column_width=True)
+    if not os.path.exists(disclaimer_img_path):
+        st.error(f"File not found: {disclaimer_img_path}")
+    else:
+        image2 = Image.open(disclaimer_img_path)
+        st.image(image2, use_column_width=True)
     st.subheader('This App does not substitute a healthcare professional!')
     st.header('')
     st.write('1. Accuracy of prediction depends on the datasets which were used for training the model within this App, and also depends on the quality of image provided.')
