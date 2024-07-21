@@ -15,7 +15,7 @@ options = st.sidebar.radio('PNEUMONIA PREDICTION MENU', options=['üè†Home', 'ü
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 def Ho():
-    st.title(":PNEUMONIA PREDICTION")
+    st.title("PNEUMONIA PREDICTION")
     st.write(":WEB APPLICATION FOR PNEUMONIA PREDICTION USING X-RAY IMAGE CLASSIFICATION]")
 
     home_img_path = os.path.join(current_dir, 'web_img', 'home.jpg')
