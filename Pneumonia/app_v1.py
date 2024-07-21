@@ -69,9 +69,11 @@ def Ap():
         with st.spinner('_Pneumpredict_ is now processing your image.......'):
             try:
                 img = Image.open(file)
-                img = img.resize((180, 180))
+                img = ImageOps.grayscale(img)  # Convert image to grayscale
+                img = img.resize((500, 500))  # Resize image to 500x500
                 img_array = np.array(img)
-                img_array = np.expand_dims(img_array, 0)  # Create a batch
+                img_array = np.expand_dims(img_array, axis=-1)  # Add the channel dimension
+                img_array = np.expand_dims(img_array, axis=0)  # Create a batch
 
                 # Debugging information
                 st.write(f"Image shape after preprocessing: {img_array.shape}")
