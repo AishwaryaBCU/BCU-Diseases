@@ -144,7 +144,7 @@ try:
         scaler = pickle.load(file)
     with open(os.path.join(assets_dir, 'feat_extraction.pickle'), 'rb') as file:
         feat_extraction = pickle.load(file)
-    with open(os.path.join(current_dir, 'kidney.sav'), 'rb') as file:
+    with open(os.path.join(assets_dir, 'model.pickle'), 'rb') as file:
         model = pickle.load(file)
 except FileNotFoundError as e:
     st.error(f"Pickle file not found: {e.filename}")
