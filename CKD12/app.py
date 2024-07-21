@@ -6,6 +6,7 @@ import json
 import os
 import base64
 
+# Set page configuration
 st.set_page_config(
     page_title="Chronic Kidney Disease Predictor",
     page_icon="👨‍⚕️",
@@ -20,6 +21,7 @@ def set_page_background(image_path):
             data = f.read()
         return base64.b64encode(data).decode()
 
+    # Convert image to base64
     if os.path.exists(image_path):
         bin_str = get_base64_of_bin_file(image_path)
         page_bg_img = f'''
@@ -33,6 +35,7 @@ def set_page_background(image_path):
         st.markdown(page_bg_img, unsafe_allow_html=True)
     else:
         st.warning(f"Background image file '{image_path}' not found.")
+        # Print the current working directory and contents for debugging
         st.text(f"Current working directory: {os.getcwd()}")
         st.text(f"Contents of the current directory: {os.listdir(os.getcwd())}")
 
@@ -42,31 +45,73 @@ background_image_path = 'CKD12/bg.jpg'
 # Set background image
 set_page_background(background_image_path)
 
-st.title('👨‍⚕️Chronic Kidney Disease Predictor')
-
+# Add custom CSS to change font and background colors
 st.markdown("""
-    <div style="background-color: rgba(255, 255, 255, 0.7); padding: 15px; border-radius: 8px;">
+    <style>
+    .stApp {
+        background-color: #f0f0f0;  /* Light gray background */
+    }
+    .stTitle, .stHeader, .stMarkdown, .stText {
+        color: #333;  /* Dark text color for visibility */
+    }
+    .stMarkdown {
+        background-color: rgba(255, 255, 255, 0.7);  /* Slightly transparent white background for text blocks */
+        padding: 15px;
+        border-radius: 8px;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# Title
+st.title('👨‍⚕️ Chronic Kidney Disease Predictor')
+
+# Description
+st.markdown("""
+    <div class="stMarkdown">
     **Chronic Kidney Disease (CKD)** is a condition where your kidneys don't work as well as they should for a long time. It can make you feel tired, swollen, or have trouble thinking clearly. This web app predicts if a patient has **Chronic Kidney Disease (CKD)** based on the patient's data.
     </div>
 """, unsafe_allow_html=True)
 
-total_features = 24
+# File paths
+column_info_path = './assets/column_info.json'
+cat_imputer_path = './assets/cat_imputer.pickle'
+encoder_path = './assets/encoder.pickle'
+cont_imputer_path = './assets/cont_imputer.pickle'
+scaler_path = './assets/scaler.pickle'
+feat_extraction_path = './assets/feat_extraction.pickle'
+model_path = './assets/model.pickle'
 
-if 'omit_feat' not in st.session_state:
-    st.session_state.omit_feat = []
-    st.session_state.omit_feat_mat = np.zeros(total_features, dtype=bool)
-
-# Load column information
-column_info = {}
+# Check if column_info.json file exists
 try:
-    with open('./assets/column_info.json', 'r') as file:
+    with open(column_info_path, 'r') as file:
         column_info = json.load(file)
 except FileNotFoundError:
-    st.error("File not found: ./assets/column_info.json")
+    st.error(f"File not found: {column_info_path}")
     st.stop()
 
+# Load model and preprocessing objects
+try:
+    with open(cat_imputer_path, 'rb') as file:
+        cat_imputer = pickle.load(file)
+    with open(encoder_path, 'rb') as file:
+        encoder = pickle.load(file)
+    with open(cont_imputer_path, 'rb') as file:
+        cont_imputer = pickle.load(file)
+    with open(scaler_path, 'rb') as file:
+        scaler = pickle.load(file)
+    with open(feat_extraction_path, 'rb') as file:
+        feat_extraction = pickle.load(file)
+    with open(model_path, 'rb') as file:
+        model = pickle.load(file)
+except FileNotFoundError as e:
+    st.error(f"File not found: {e.filename}")
+    st.stop()
+
+# Total features and labels
+total_features = 24
 labels = column_info['full']
 
+# Initialize DataFrame
 X = pd.DataFrame(np.empty((1, total_features)), columns=labels)
 
 def disable_widgets():
@@ -81,7 +126,7 @@ omit_feat = st.multiselect("Select the features you don't know", labels,
 
 with st.empty():
     if len(st.session_state.omit_feat) > 0:
-        st.info(f"The model can predict omitted features, bearing in mind that the accuracy may vary.", icon='📖')
+        st.info("The model can predict omitted features, bearing in mind that the accuracy may vary.", icon='📖')
 
 with st.form("my_form"):
     cols = st.columns(4)
@@ -119,53 +164,36 @@ with st.form("my_form"):
     
     predict_btn = st.form_submit_button("Predict")
 
-# Process input for prediction
+# Update the dataframe with omitted features
 X[st.session_state.omit_feat] = np.nan
 X_proc = X.copy()
 
-# Column names for model
+# Column mappings
 cols = ['age', 'bp', 'sg', 'al', 'su', 'rbc', 'pc', 'pcc', 'ba',
         'bgr', 'bu',  'sc', 'sod', 'pot', 'hemo', 'pcv', 'wbcc',
         'rbcc', 'htn', 'dm', 'cad', 'appet', 'pe', 'ane']
 
 rename_dict = {labels[i]: cols[i] for i in range(len(labels))}
 
+# Process input data
 X_proc.rename(columns=rename_dict, inplace=True)
-X_proc = X_proc.applymap(lambda s: s.lower().replace(' ', '') if isinstance(s, str) else s)
+X_proc = X_proc.applymap(lambda s: s.lower().replace(' ', '') if type(s) == str else s)
 
-try:
-    with open('./assets/cat_imputer.pickle', 'rb') as file:
-        cat_imputer = pickle.load(file)
-    with open('./assets/encoder.pickle', 'rb') as file:
-        encoder = pickle.load(file)
-    with open('./assets/cont_imputer.pickle', 'rb') as file:
-        cont_imputer = pickle.load(file)
-    with open('./assets/scaler.pickle', 'rb') as file:
-        scaler = pickle.load(file)
-    with open('./assets/feat_extraction.pickle', 'rb') as file:
-        feat_extraction = pickle.load(file)
-    with open('./assets/model.pickle', 'rb') as file:
-        model = pickle.load(file)
-except FileNotFoundError as e:
-    st.error(f"Error loading model files: {str(e)}")
-    st.stop()
-
-# Apply transformations
+# Transform data
 X_proc[column_info['cat_imputer']] = cat_imputer.transform(X_proc[column_info['cat_imputer']])
 X_proc[column_info['encoder']] = encoder.transform(X_proc[column_info['encoder']])
 X_proc = cont_imputer.transform(X_proc)
 X_proc = pd.DataFrame(X_proc, columns=column_info['abbrev'])
-X_proc[column_info['scaler']] = scaler.transform(X_proc[column_info['scaler']])
+X_proc[column_info['scaler']] = scaler.transform(X_proc)
 X_proc = feat_extraction.transform(X_proc)
 
 # Make prediction
+[y_pred] = model.predict(X_proc)
+
+# Display prediction
 if predict_btn:
-    try:
-        [y_pred] = model.predict(X_proc)
-        st.header("🎯Prediction")
-        if y_pred == 1:
-            st.error("The Patient has Chronic Kidney Disease (CKD).", icon='🩺')
-        else:
-            st.success("The Patient does not have Chronic Kidney Disease (CKD).", icon='🩺')
-    except Exception as e:
-        st.error(f"An error occurred during prediction: {str(e)}")
+    st.header("🎯 Prediction")
+    if y_pred == 1:
+        st.error("The Patient has Chronic Kidney Disease (CKD).", icon='🩺')
+    else:
+        st.success("The Patient does not have Chronic Kidney Disease (CKD).", icon='🩺')
