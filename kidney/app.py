@@ -2,12 +2,37 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import pickle, json
+import os
+
+# Get the absolute path of the current directory
+current_dir = os.path.dirname(os.path.abspath(__file__))
+bg_path = os.path.join(current_dir, 'web_img', 'bg.jpg')
+
 
 st.set_page_config(
     page_title="Chronic Kidney Disease Predictor",
-    page_icon="🦠",
+    page_icon="🦠",  # Set the custom icon
     layout="wide"
 )
+
+# Inject custom CSS to add background image
+def set_background(bg_path):
+    st.markdown(
+        f"""
+        <style>
+        .stApp {{
+            background: url({bg_path});
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+# Call the function to set the background
+set_background(bg_path)
 
 st.title('👨‍⚕️Chronic Kidney Disease Predictor')
 
@@ -78,8 +103,6 @@ with st.form("my_form"):
     
     predict_btn = st.form_submit_button("Predict")
 
-
-
 X[st.session_state.omit_feat] = np.nan
 X_proc = X.copy()
 
@@ -91,7 +114,6 @@ rename_dict = {labels[i]: cols[i] for i in range(len(labels))}
 
 X_proc.rename(columns=rename_dict, inplace=True)
 X_proc = X_proc.applymap(lambda s: s.lower().replace(' ', '') if type(s) == str else s)
-
 
 with open('./assets/cat_imputer.pickle', 'rb') as file:
     cat_imputer = pickle.load(file)
@@ -112,68 +134,17 @@ with open('./assets/model.pickle', 'rb') as file:
     model = pickle.load(file)
 
 X_proc[column_info['cat_imputer']] = cat_imputer.transform(X_proc[column_info['cat_imputer']])
-
 X_proc[column_info['encoder']] = encoder.transform(X_proc[column_info['encoder']])
-
 X_proc = cont_imputer.transform(X_proc)
 X_proc = pd.DataFrame(X_proc, columns=column_info['abbrev'])
-
 X_proc[column_info['scaler']] = scaler.transform(X_proc[column_info['scaler']])
-
 X_proc = feat_extraction.transform(X_proc)
 
 [y_pred] = model.predict(X_proc)
 
-
 if predict_btn:
-      
     st.header("🎯Prediction")
-
     if y_pred == 1:
         st.error("The Patient has Chronic Kidney Disease (CKD).", icon='🩺')
     else:
-       
         st.success("The Patient does not have Chronic Kidney Disease (CKD).", icon='🩺')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# import time
-
-# 'Starting a long computation...'
-
-# # Add a placeholder
-# latest_iteration = st.empty()
-# bar = st.progress(0)
-
-# for i in range(100):
-#   # Update the progress bar with each iteration.
-#   latest_iteration.text(f'Iteration {i+1}')
-#   bar.progress(i + 1)
-#   time.sleep(0.1)
