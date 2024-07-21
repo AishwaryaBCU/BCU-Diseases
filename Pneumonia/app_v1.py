@@ -7,7 +7,7 @@ import numpy as np
 import webbrowser
 import os
 
-st.set_page_config(layout="wide",page_icon="🧑‍⚕️", page_title="Pneumonia prediction ")
+st.set_page_config(layout="wide",page_icon="🧑‍⚕️", page_title="Pneumonia prediction    ")
 
 options = st.sidebar.radio('PNEUMPREDICT MENU', options=['🏠Home', '🏥About Pneumonia', '🤖Application', '⚠️Disclaimer', '🔖Resources', '👨🏻‍💻About Project'])
 
