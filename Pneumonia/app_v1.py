@@ -57,7 +57,7 @@ def Ap():
 
     if file is None:
         st.subheader("Please upload an X-ray image using the browse button :point_up:")
-        st.write("Sample images can be found [here](https://github.com/sabahuddinahmad/Pneumpredict/tree/main/sample_images)!")
+        st.write("Sample images can be found [here](https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia)!")
         compared_img_path = os.path.join(current_dir, 'web_img', 'compared.JPG')
         if not os.path.exists(compared_img_path):
             st.error(f"File not found: {compared_img_path}")
@@ -66,7 +66,7 @@ def Ap():
             st.image(image1, use_column_width=True)
     else:
         st.subheader("Thank you for uploading X-ray image!")
-        with st.spinner('_Pneumpredict_ is now processing your image.......'):
+        with st.spinner('We are processing your image.......'):
             try:
                 img = Image.open(file)
                 img = ImageOps.grayscale(img)  # Convert image to grayscale
@@ -87,7 +87,7 @@ def Ap():
                     f"Uploaded X-ray image looks like this :point_down: and most likely belongs to {'Infected lungs' if np.max(score) > 0.5 else 'Normal lungs'}!"
                 )
                 st.image(img, width=400)
-                st.subheader("Thank you for using _Pneumpredict_")
+                st.subheader("Thank you for using this application!")
             except Exception as e:
                 st.error(f"An error occurred during prediction: {e}")
 
@@ -104,7 +104,7 @@ def Di():
     st.write('2. Do not use prediction results from this App to diagnose or treat any medical or health condition.')
     st.write('3. App cannot classify underlying medical reasons that corresponds to the infections, for example: bacterial, viral, smoking, etc.')
     st.write('4. Healthcare professional will do blood tests and other physical examinations to identify root cause of the infections.')
-    st.write('5. Uplodaded X-ray image is not retained by _Pneumpredict_.')
+    st.write('5. Uplodaded X-ray image is not retained by Application.')
 
 def Ci():
     st.header('Dataset availibility & recommended resources')
