@@ -1,7 +1,10 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-import pickle, json
+import pickle
+import json
+import os
+import base64
 
 st.set_page_config(
     page_title="Chronic Kidney Disease Predictor",
@@ -51,6 +54,7 @@ if 'omit_feat' not in st.session_state:
     st.session_state.omit_feat = []
     st.session_state.omit_feat_mat = np.zeros(total_features, dtype=bool)
 
+# Load column information
 column_info = {}
 with open('./assets/column_info.json', 'r') as file:
     column_info = json.load(file)
@@ -66,9 +70,8 @@ def disable_widgets():
 
 st.header("Input the Patient's Data")
 omit_feat = st.multiselect("Select the features you don't know", labels, 
-                            placeholder="Ommited Features ex. Potassium (i don't know the potassium level).",
+                            placeholder="Omitted Features ex. Potassium (I don't know the potassium level).",
                             key="omit_feat", on_change=disable_widgets)
-
 
 with st.empty():
     if len(st.session_state.omit_feat) > 0:
@@ -110,11 +113,11 @@ with st.form("my_form"):
     
     predict_btn = st.form_submit_button("Predict")
 
-
-
+# Process input for prediction
 X[st.session_state.omit_feat] = np.nan
 X_proc = X.copy()
 
+# Column names for model
 cols = ['age', 'bp', 'sg', 'al', 'su', 'rbc', 'pc', 'pcc', 'ba',
         'bgr', 'bu',  'sc', 'sod', 'pot', 'hemo', 'pcv', 'wbcc',
         'rbcc', 'htn', 'dm', 'cad', 'appet', 'pe', 'ane']
@@ -122,9 +125,9 @@ cols = ['age', 'bp', 'sg', 'al', 'su', 'rbc', 'pc', 'pcc', 'ba',
 rename_dict = {labels[i]: cols[i] for i in range(len(labels))}
 
 X_proc.rename(columns=rename_dict, inplace=True)
-X_proc = X_proc.applymap(lambda s: s.lower().replace(' ', '') if type(s) == str else s)
+X_proc = X_proc.applymap(lambda s: s.lower().replace(' ', '') if isinstance(s, str) else s)
 
-
+# Load pickle files
 with open('./assets/cat_imputer.pickle', 'rb') as file:
     cat_imputer = pickle.load(file)
 
@@ -143,69 +146,22 @@ with open('./assets/feat_extraction.pickle', 'rb') as file:
 with open('./assets/model.pickle', 'rb') as file:
     model = pickle.load(file)
 
+# Apply transformations
 X_proc[column_info['cat_imputer']] = cat_imputer.transform(X_proc[column_info['cat_imputer']])
-
 X_proc[column_info['encoder']] = encoder.transform(X_proc[column_info['encoder']])
-
 X_proc = cont_imputer.transform(X_proc)
 X_proc = pd.DataFrame(X_proc, columns=column_info['abbrev'])
-
 X_proc[column_info['scaler']] = scaler.transform(X_proc[column_info['scaler']])
-
 X_proc = feat_extraction.transform(X_proc)
 
-[y_pred] = model.predict(X_proc)
-
-
+# Make prediction
 if predict_btn:
-      
-    st.header("🎯Prediction")
-
-    if y_pred == 1:
-        st.error("The Patient has Chronic Kidney Disease (CKD).", icon='🩺')
-    else:
-       
-        st.success("The Patient does not have Chronic Kidney Disease (CKD).", icon='🩺')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# import time
-
-# 'Starting a long computation...'
-
-# # Add a placeholder
-# latest_iteration = st.empty()
-# bar = st.progress(0)
-
-# for i in range(100):
-#   # Update the progress bar with each iteration.
-#   latest_iteration.text(f'Iteration {i+1}')
-#   bar.progress(i + 1)
-#   time.sleep(0.1)
+    try:
+        [y_pred] = model.predict(X_proc)
+        st.header("🎯Prediction")
+        if y_pred == 1:
+            st.error("The Patient has Chronic Kidney Disease (CKD).", icon='🩺')
+        else:
+            st.success("The Patient does not have Chronic Kidney Disease (CKD).", icon='🩺')
+    except Exception as e:
+        st.error(f"An error occurred during prediction: {str(e)}")
