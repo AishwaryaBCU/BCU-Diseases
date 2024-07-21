@@ -9,30 +9,10 @@ import os
 
 st.set_page_config(layout="wide")
 
-# Inject custom CSS to add background image
-def set_background(bg_path):
-    st.markdown(
-        f"""
-        <style>
-        .stApp {{
-            background: url({bg_path});
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
 options = st.sidebar.radio('PNEUMPREDICT MENU', options=['🏠Home', '🏥About Pneumonia', '🤖Application', '⚠️Disclaimer', '🔖Resources', '👨🏻‍💻About Project'])
 
 # Get the absolute path of the current directory
 current_dir = os.path.dirname(os.path.abspath(__file__))
-bg_path = os.path.join(current_dir, 'web_img', 'bg.jpg')
-
-# Set the background image
-set_background(bg_path)
 
 def Ho():
     st.title(":red[_Pneumpredict_]")
@@ -154,4 +134,4 @@ elif options == '⚠️Disclaimer':
 elif options == '🔖Resources':
     Ci()
 elif options == '👨🏻‍💻About Project':
-    Me()
+    Me() 
