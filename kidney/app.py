@@ -11,6 +11,7 @@ assets_dir = os.path.join(current_dir, 'assets')
 print("Assets Directory:", assets_dir)
 
 column_info_path = os.path.join(assets_dir, 'column_info.json')
+print("Column Info Path:", column_info_path)
 
 try:
     with open(column_info_path, 'r') as file:
@@ -19,7 +20,7 @@ except FileNotFoundError:
     st.error(f"File not found: {column_info_path}")
     raise
 
-# Set page configuration and other setup
+# Other paths
 icon_path = os.path.join(current_dir, 'web_img', 'lungs_icon.png')
 bg_path = os.path.join(current_dir, 'web_img', 'bg.jpg')
 
@@ -46,7 +47,6 @@ def set_background(bg_path):
 
 set_background(bg_path)
 
-
 st.title('👨‍⚕️Chronic Kidney Disease Predictor')
 
 st.markdown("**Chronic Kidney Disease (CKD)** is a condition where your kidneys don't work as well as they should for a long time. It can make you feel tired, swollen, or have trouble thinking clearly. This web app predicts if a patient has **Chronic Kidney Disease (CKD)** based on the patient's data.")
@@ -57,9 +57,13 @@ if 'omit_feat' not in st.session_state:
     st.session_state.omit_feat = []
     st.session_state.omit_feat_mat = np.zeros(total_features, dtype=bool)
 
-column_info = {}
-with open('./assets/column_info.json', 'r') as file:
-    column_info = json.load(file)
+# Attempt to load column info again
+try:
+    with open(column_info_path, 'r') as file:
+        column_info = json.load(file)
+except FileNotFoundError:
+    st.error(f"File not found: {column_info_path}")
+    raise
 
 labels = column_info['full']
 
@@ -74,7 +78,6 @@ st.header("Input the Patient's Data")
 omit_feat = st.multiselect("Select the features you don't know", labels, 
                             placeholder="Ommited Features ex. Potassium (i don't know the potassium level).",
                             key="omit_feat", on_change=disable_widgets)
-
 
 with st.empty():
     if len(st.session_state.omit_feat) > 0:
@@ -116,6 +119,7 @@ with st.form("my_form"):
     
     predict_btn = st.form_submit_button("Predict")
 
+# Handling predictions
 X[st.session_state.omit_feat] = np.nan
 X_proc = X.copy()
 
@@ -128,23 +132,23 @@ rename_dict = {labels[i]: cols[i] for i in range(len(labels))}
 X_proc.rename(columns=rename_dict, inplace=True)
 X_proc = X_proc.applymap(lambda s: s.lower().replace(' ', '') if type(s) == str else s)
 
-with open('./assets/cat_imputer.pickle', 'rb') as file:
-    cat_imputer = pickle.load(file)
-
-with open('./assets/encoder.pickle', 'rb') as file:
-    encoder = pickle.load(file)
-
-with open('./assets/cont_imputer.pickle', 'rb') as file:
-    cont_imputer = pickle.load(file)
-
-with open('./assets/scaler.pickle', 'rb') as file:
-    scaler = pickle.load(file)
-
-with open('./assets/feat_extraction.pickle', 'rb') as file:
-    feat_extraction = pickle.load(file)
-
-with open('./assets/model.pickle', 'rb') as file:
-    model = pickle.load(file)
+# Loading pickle files
+try:
+    with open(os.path.join(assets_dir, 'cat_imputer.pickle'), 'rb') as file:
+        cat_imputer = pickle.load(file)
+    with open(os.path.join(assets_dir, 'encoder.pickle'), 'rb') as file:
+        encoder = pickle.load(file)
+    with open(os.path.join(assets_dir, 'cont_imputer.pickle'), 'rb') as file:
+        cont_imputer = pickle.load(file)
+    with open(os.path.join(assets_dir, 'scaler.pickle'), 'rb') as file:
+        scaler = pickle.load(file)
+    with open(os.path.join(assets_dir, 'feat_extraction.pickle'), 'rb') as file:
+        feat_extraction = pickle.load(file)
+    with open(os.path.join(assets_dir, 'model.pickle'), 'rb') as file:
+        model = pickle.load(file)
+except FileNotFoundError as e:
+    st.error(f"Pickle file not found: {e.filename}")
+    raise
 
 X_proc[column_info['cat_imputer']] = cat_imputer.transform(X_proc[column_info['cat_imputer']])
 X_proc[column_info['encoder']] = encoder.transform(X_proc[column_info['encoder']])
