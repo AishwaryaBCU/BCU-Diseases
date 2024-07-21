@@ -9,6 +9,38 @@ st.set_page_config(
     layout="wide"
 )
 
+# Function to set background image
+def set_page_background(image_path):
+    @st.cache(suppress_st_warning=True)
+    def get_base64_of_bin_file(filename):
+        with open(filename, 'rb') as f:
+            data = f.read()
+        return base64.b64encode(data).decode()
+
+    # Convert image to base64
+    if os.path.exists(image_path):
+        bin_str = get_base64_of_bin_file(image_path)
+        page_bg_img = f'''
+            <style>
+            .stApp {{
+                background-image: url("data:image/jpg;base64,{bin_str}");
+                background-size: cover;
+            }}
+            </style>
+        '''
+        st.markdown(page_bg_img, unsafe_allow_html=True)
+    else:
+        st.warning(f"Background image file '{image_path}' not found.")
+        # Print the current working directory and contents for debugging
+        st.text(f"Current working directory: {os.getcwd()}")
+        st.text(f"Contents of the current directory: {os.listdir(os.getcwd())}")
+
+# Set background image path
+background_image_path = 'CKD12/bg.jpg'
+
+# Set background image
+set_page_background(background_image_path)
+
 st.title('👨‍⚕️Chronic Kidney Disease Predictor')
 
 st.markdown("**Chronic Kidney Disease (CKD)** is a condition where your kidneys don't work as well as they should for a long time. It can make you feel tired, swollen, or have trouble thinking clearly. This web app predicts if a patient has **Chronic Kidney Disease (CKD)** based on the patient's data.")
