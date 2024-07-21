@@ -5,7 +5,7 @@ import pickle, json
 
 st.set_page_config(
     page_title="Chronic Kidney Disease Predictor",
-    page_icon="👨‍⚕️",
+    page_icon="🦠",
     layout="wide"
 )
 
