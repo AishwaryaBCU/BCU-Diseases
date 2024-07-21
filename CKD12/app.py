@@ -20,7 +20,6 @@ def set_page_background(image_path):
             data = f.read()
         return base64.b64encode(data).decode()
 
-    # Convert image to base64
     if os.path.exists(image_path):
         bin_str = get_base64_of_bin_file(image_path)
         page_bg_img = f'''
@@ -34,7 +33,6 @@ def set_page_background(image_path):
         st.markdown(page_bg_img, unsafe_allow_html=True)
     else:
         st.warning(f"Background image file '{image_path}' not found.")
-        # Print the current working directory and contents for debugging
         st.text(f"Current working directory: {os.getcwd()}")
         st.text(f"Contents of the current directory: {os.listdir(os.getcwd())}")
 
@@ -46,7 +44,11 @@ set_page_background(background_image_path)
 
 st.title('👨‍⚕️Chronic Kidney Disease Predictor')
 
-st.markdown("**Chronic Kidney Disease (CKD)** is a condition where your kidneys don't work as well as they should for a long time. It can make you feel tired, swollen, or have trouble thinking clearly. This web app predicts if a patient has **Chronic Kidney Disease (CKD)** based on the patient's data.")
+st.markdown("""
+    <div style="background-color: rgba(255, 255, 255, 0.7); padding: 15px; border-radius: 8px;">
+    **Chronic Kidney Disease (CKD)** is a condition where your kidneys don't work as well as they should for a long time. It can make you feel tired, swollen, or have trouble thinking clearly. This web app predicts if a patient has **Chronic Kidney Disease (CKD)** based on the patient's data.
+    </div>
+""", unsafe_allow_html=True)
 
 total_features = 24
 
@@ -56,8 +58,12 @@ if 'omit_feat' not in st.session_state:
 
 # Load column information
 column_info = {}
-with open('./assets/column_info.json', 'r') as file:
-    column_info = json.load(file)
+try:
+    with open('./assets/column_info.json', 'r') as file:
+        column_info = json.load(file)
+except FileNotFoundError:
+    st.error("File not found: ./assets/column_info.json")
+    st.stop()
 
 labels = column_info['full']
 
@@ -127,24 +133,22 @@ rename_dict = {labels[i]: cols[i] for i in range(len(labels))}
 X_proc.rename(columns=rename_dict, inplace=True)
 X_proc = X_proc.applymap(lambda s: s.lower().replace(' ', '') if isinstance(s, str) else s)
 
-# Load pickle files
-with open('./assets/cat_imputer.pickle', 'rb') as file:
-    cat_imputer = pickle.load(file)
-
-with open('./assets/encoder.pickle', 'rb') as file:
-    encoder = pickle.load(file)
-
-with open('./assets/cont_imputer.pickle', 'rb') as file:
-    cont_imputer = pickle.load(file)
-
-with open('./assets/scaler.pickle', 'rb') as file:
-    scaler = pickle.load(file)
-
-with open('./assets/feat_extraction.pickle', 'rb') as file:
-    feat_extraction = pickle.load(file)
-
-with open('./assets/model.pickle', 'rb') as file:
-    model = pickle.load(file)
+try:
+    with open('./assets/cat_imputer.pickle', 'rb') as file:
+        cat_imputer = pickle.load(file)
+    with open('./assets/encoder.pickle', 'rb') as file:
+        encoder = pickle.load(file)
+    with open('./assets/cont_imputer.pickle', 'rb') as file:
+        cont_imputer = pickle.load(file)
+    with open('./assets/scaler.pickle', 'rb') as file:
+        scaler = pickle.load(file)
+    with open('./assets/feat_extraction.pickle', 'rb') as file:
+        feat_extraction = pickle.load(file)
+    with open('./assets/model.pickle', 'rb') as file:
+        model = pickle.load(file)
+except FileNotFoundError as e:
+    st.error(f"Error loading model files: {str(e)}")
+    st.stop()
 
 # Apply transformations
 X_proc[column_info['cat_imputer']] = cat_imputer.transform(X_proc[column_info['cat_imputer']])
