@@ -9,7 +9,7 @@ import os
 
 st.set_page_config(layout="wide")
 
-options = st.sidebar.radio('PNEUMPREDICT MENU', options=['🏠Home', '🏥About Pneumonia', '🤖Application', '⚠️Disclaimer', '🔖Resources', '👨🏻‍💻About me'])
+options = st.sidebar.radio('PNEUMPREDICT MENU', options=['🏠Home', '🏥About Pneumonia', '🤖Application', '⚠️Disclaimer', '🔖Resources', '👨🏻‍💻About Project'])
 
 # Get the absolute path of the current directory
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -115,13 +115,13 @@ def Ci():
     st.write("4. To implement TensorFlow in image classification, there is an amazing [tutorial](https://www.tensorflow.org/tutorials/images/classification).")
 
 def Me():
-    st.header(':red[About myself:]')
+    st.header(':red[About Project:]')
     st.subheader('')
-    st.write('Greetings! I am Sabah, a computational biochemist passionate about decoding the mysteries of life through molecular modeling & data science. With a doctorate in Computational Biochemistry and a background in Bioinformatics, I have contributed to significant research in biomedicine.')
-    st.write('From unraveling the dynamics of membrane proteins to pioneering novel drug discovery methods, my work has been [published](https://scholar.google.com/citations?user=fvF831wAAAAJ&hl=en) in leading journals and has taken me around the globe, collaborating with top researchers.')
-    st.write('Driven by curiosity, I recently immersed myself in data science, completing a 4 months long rigorous bootcamp at WBS Coding School in Berlin. There for the final project (3 weeks long), I developed _Pneumpredict_, a tool using machine learning to classify lung X-rays and identify lung infections.')
-    st.write('Connect with me on [LinkedIn](https://www.linkedin.com/in/sabahuddinahmad) or follow me on [Twitter](https://twitter.com/sabahahmad_IN) to stay updated on my latest projects and professional endeavors.')
-    st.write('Let us connect, collaborate, and explore new horizons together!')
+    st.write('Greetings! I am Aishwarya U ,Student at Bengaluru City University, This project deals with finding whether the person suffering with Pneumonia or not.')
+   
+    st.write('Pneumonia is an infection that inflames the air sacs in one or both lungs. The air sacs may fill with fluid or pus (purulent material), causing cough with phlegm or pus, fever, chills, and difficulty breathing. A variety of organisms, including bacteria, viruses and fungi, can cause pneumonia.')
+    st.write('The machine learning model used in this project achieves an accuracy of approximately 92% on the test dataset. This means that the model is able to correctly predict pneumonia 92% of the time based on the given health parameters.')
+    st.write('This pneumonia prediction tool is developed using machine learning techniques to predict the likelihood of pneumonia in individuals based on various health parameters. The model is trained on a dataset that includes parameters.')
 
 if options == '🏠Home':
     Ho()
@@ -133,5 +133,5 @@ elif options == '⚠️Disclaimer':
     Di()
 elif options == '🔖Resources':
     Ci()
-elif options == '👨🏻‍💻About me':
+elif options == '👨🏻‍💻About Project':
     Me()
