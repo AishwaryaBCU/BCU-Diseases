@@ -35,7 +35,6 @@ def set_page_background(image_path):
         st.markdown(page_bg_img, unsafe_allow_html=True)
     else:
         st.warning(f"Background image file '{image_path}' not found.")
-        # Print the current working directory and contents for debugging
         st.text(f"Current working directory: {os.getcwd()}")
         st.text(f"Contents of the current directory: {os.listdir(os.getcwd())}")
 
@@ -73,21 +72,21 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # File paths
-column_info_path = './assets/column_info.json'
-cat_imputer_path = './assets/cat_imputer.pickle'
-encoder_path = './assets/encoder.pickle'
-cont_imputer_path = './assets/cont_imputer.pickle'
-scaler_path = './assets/scaler.pickle'
-feat_extraction_path = './assets/feat_extraction.pickle'
-model_path = './assets/model.pickle'
+column_info_path = './CKD12/column_info.json'
+cat_imputer_path = './CKD12/cat_imputer.pickle'
+encoder_path = './CKD12/encoder.pickle'
+cont_imputer_path = './CKD12/cont_imputer.pickle'
+scaler_path = './CKD12/scaler.pickle'
+feat_extraction_path = './CKD12/feat_extraction.pickle'
+model_path = './CKD12/model.pickle'
 
 # Check if column_info.json file exists
-try:
-    with open(column_info_path, 'r') as file:
-        column_info = json.load(file)
-except FileNotFoundError:
+if not os.path.exists(column_info_path):
     st.error(f"File not found: {column_info_path}")
     st.stop()
+
+with open(column_info_path, 'r') as file:
+    column_info = json.load(file)
 
 # Load model and preprocessing objects
 try:
@@ -143,57 +142,15 @@ with st.form("my_form"):
         X[labels[7]] = st.selectbox(labels[7], ('Not Present', 'Present'), disabled=st.session_state.omit_feat_mat[7])
         X[labels[8]] = st.selectbox(labels[8], ('Not Present', 'Present'), disabled=st.session_state.omit_feat_mat[8])
         X[labels[9]] = st.slider(labels[9], min_value=0, max_value=500, value=150, disabled=st.session_state.omit_feat_mat[9])
-        X[labels[10]] = st.slider(labels[10], min_value=0, max_value=400, value=60, disabled=st.session_state.omit_feat_mat[10])
-        X[labels[11]] = st.slider(labels[11], min_value=0.0, max_value=80.0, value=3.1, step=0.1, disabled=st.session_state.omit_feat_mat[11])
+        X[labels[10]] = st.slider(labels[10], min_value=0, max_value=500, value=100, disabled=st.session_state.omit_feat_mat[10])
 
-    with cols[2]:
-        X[labels[12]] = st.slider(labels[12], min_value=0.0, max_value=180.0, value=137.5, step=0.5, disabled=st.session_state.omit_feat_mat[12])
-        X[labels[13]] = st.slider(labels[13], min_value=0.0, max_value=50.0, value=4.6, step=0.1, disabled=st.session_state.omit_feat_mat[13])
-        X[labels[14]] = st.slider(labels[14], min_value=0.0, max_value=20.0, value=12.6, step=0.1, disabled=st.session_state.omit_feat_mat[14])
-        X[labels[15]] = st.slider(labels[15], min_value=0, max_value=60, value=39, disabled=st.session_state.omit_feat_mat[15])
-        X[labels[16]] = st.slider(labels[16], min_value=2000, max_value=26400, value=2600, step=10, disabled=st.session_state.omit_feat_mat[16])
-        X[labels[17]] = st.slider(labels[17], min_value=2.0, max_value=10.0, value=4.7, step=0.1, disabled=st.session_state.omit_feat_mat[17])
+    # Add more input fields as needed
+    submit_button = st.form_submit_button("Submit")
 
-    with cols[3]:
-        X[labels[18]] = st.selectbox(labels[18], ('No', 'Yes'), disabled=st.session_state.omit_feat_mat[18])
-        X[labels[19]] = st.selectbox(labels[19], ('No', 'Yes'), disabled=st.session_state.omit_feat_mat[19])
-        X[labels[20]] = st.selectbox(labels[20], ('No', 'Yes'), disabled=st.session_state.omit_feat_mat[20])
-        X[labels[21]] = st.selectbox(labels[21], ('Good', 'Poor'), disabled=st.session_state.omit_feat_mat[21])
-        X[labels[22]] = st.selectbox(labels[22], ('No', 'Yes'), disabled=st.session_state.omit_feat_mat[22])
-        X[labels[23]] = st.selectbox(labels[23], ('No', 'Yes'), disabled=st.session_state.omit_feat_mat[23])
-    
-    predict_btn = st.form_submit_button("Predict")
-
-# Update the dataframe with omitted features
-X[st.session_state.omit_feat] = np.nan
-X_proc = X.copy()
-
-# Column mappings
-cols = ['age', 'bp', 'sg', 'al', 'su', 'rbc', 'pc', 'pcc', 'ba',
-        'bgr', 'bu',  'sc', 'sod', 'pot', 'hemo', 'pcv', 'wbcc',
-        'rbcc', 'htn', 'dm', 'cad', 'appet', 'pe', 'ane']
-
-rename_dict = {labels[i]: cols[i] for i in range(len(labels))}
-
-# Process input data
-X_proc.rename(columns=rename_dict, inplace=True)
-X_proc = X_proc.applymap(lambda s: s.lower().replace(' ', '') if type(s) == str else s)
-
-# Transform data
-X_proc[column_info['cat_imputer']] = cat_imputer.transform(X_proc[column_info['cat_imputer']])
-X_proc[column_info['encoder']] = encoder.transform(X_proc[column_info['encoder']])
-X_proc = cont_imputer.transform(X_proc)
-X_proc = pd.DataFrame(X_proc, columns=column_info['abbrev'])
-X_proc[column_info['scaler']] = scaler.transform(X_proc)
-X_proc = feat_extraction.transform(X_proc)
-
-# Make prediction
-[y_pred] = model.predict(X_proc)
-
-# Display prediction
-if predict_btn:
-    st.header("🎯 Prediction")
-    if y_pred == 1:
-        st.error("The Patient has Chronic Kidney Disease (CKD).", icon='🩺')
-    else:
-        st.success("The Patient does not have Chronic Kidney Disease (CKD).", icon='🩺')
+    if submit_button:
+        # Your prediction logic here
+        st.write("Form submitted!")
+        # Example prediction
+        # X_preprocessed = preprocess(X)  # Apply your preprocessing steps
+        # prediction = model.predict(X_preprocessed)
+        # st.write(f"Prediction: {prediction}")
