@@ -29,7 +29,7 @@ def Ab():
     st.write("Source and further reading available at https://en.wikipedia.org/wiki/Pneumonia")
 
 def Ap():
-    @st.cache(allow_output_mutation=True)
+    @st.cache_data
     def load_model():
         model_path = os.path.join(current_dir, 'xray_model_80-20.h5')
         model = tf.keras.models.load_model(model_path)
@@ -55,21 +55,27 @@ def Ap():
     else:
         st.subheader("Thank you for uploading X-ray image!")
         with st.spinner('_Pneumpredict_ is now processing your image.......'):
-            img = Image.open(file)
-            img = img.resize((180, 180))
-            img_array = np.array(img)
-            img_array = np.expand_dims(img_array, 0)  # Create a batch
+            try:
+                img = Image.open(file)
+                img = img.resize((180, 180))
+                img_array = np.array(img)
+                img_array = np.expand_dims(img_array, 0)  # Create a batch
 
-            predictions = model.predict(img_array)
-            score = tf.sigmoid(predictions)
+                # Debugging information
+                st.write(f"Image shape after preprocessing: {img_array.shape}")
 
-            time.sleep(2)
-            st.success('Prediction is complete!')
-            st.subheader(
-                f"Uploaded X-ray image looks like this :point_down: and most likely belongs to {'Infected lungs' if np.max(score) > 0.5 else 'Normal lungs'}!"
-            )
-            st.image(img, width=400)
-            st.subheader("Thank you for using _Pneumpredict_")
+                predictions = model.predict(img_array)
+                score = tf.sigmoid(predictions)
+
+                time.sleep(2)
+                st.success('Prediction is complete!')
+                st.subheader(
+                    f"Uploaded X-ray image looks like this :point_down: and most likely belongs to {'Infected lungs' if np.max(score) > 0.5 else 'Normal lungs'}!"
+                )
+                st.image(img, width=400)
+                st.subheader("Thank you for using _Pneumpredict_")
+            except Exception as e:
+                st.error(f"An error occurred during prediction: {e}")
 
 def Di():
     disclaimer_img_path = os.path.join(current_dir, 'web_img', 'disclaimer.JPG')
