@@ -16,7 +16,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 
 def Ho():
     st.title("PNEUMONIA PREDICTION")
-    st.write(":WEB APPLICATION FOR PNEUMONIA PREDICTION USING X-RAY IMAGE CLASSIFICATION]")
+    st.write(":WEB APPLICATION FOR PNEUMONIA PREDICTION USING X-RAY IMAGE CLASSIFICATION.")
 
     home_img_path = os.path.join(current_dir, 'web_img', 'home.jpg')
     if not os.path.exists(home_img_path):
