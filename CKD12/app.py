@@ -38,8 +38,9 @@ def set_page_background(image_path):
         st.text(f"Current working directory: {os.getcwd()}")
         st.text(f"Contents of the current directory: {os.listdir(os.getcwd())}")
 
-# Set background image path
-background_image_path = 'CKD12/bg.jpg'
+# Get current working directory and file paths
+current_dir = os.path.dirname(os.path.abspath(__file__))
+background_image_path = os.path.join(current_dir, 'bg.jpg')
 
 # Set background image
 set_page_background(background_image_path)
@@ -72,13 +73,14 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # File paths
-column_info_path = './CKD12/column_info.json'
-cat_imputer_path = './CKD12/cat_imputer.pickle'
-encoder_path = './CKD12/encoder.pickle'
-cont_imputer_path = './CKD12/cont_imputer.pickle'
-scaler_path = './CKD12/scaler.pickle'
-feat_extraction_path = './CKD12/feat_extraction.pickle'
-model_path = './CKD12/model.pickle'
+assets_dir = os.path.join(current_dir, 'CKD12')
+column_info_path = os.path.join(assets_dir, 'column_info.json')
+cat_imputer_path = os.path.join(assets_dir, 'cat_imputer.pickle')
+encoder_path = os.path.join(assets_dir, 'encoder.pickle')
+cont_imputer_path = os.path.join(assets_dir, 'cont_imputer.pickle')
+scaler_path = os.path.join(assets_dir, 'scaler.pickle')
+feat_extraction_path = os.path.join(assets_dir, 'feat_extraction.pickle')
+model_path = os.path.join(assets_dir, 'model.pickle')
 
 # Check if column_info.json file exists
 if not os.path.exists(column_info_path):
