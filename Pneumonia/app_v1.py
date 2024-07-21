@@ -9,14 +9,14 @@ import os
 
 st.set_page_config(layout="wide",page_icon="🧑‍⚕️", page_title="BCU Pneumonia prediction System ")
 
-options = st.sidebar.radio('PNEUMPREDICT MENU', options=['🏠Home', '🏥About Pneumonia', '🤖Application', '⚠️Disclaimer', '🔖Resources', '👨🏻‍💻About Project'])
+options = st.sidebar.radio('PNEUMONIA PREDICTION MENU', options=['🏠Home', '🏥About Pneumonia', '🤖Application', '⚠️Disclaimer', '🔖Resources', '👨🏻‍💻About Project'])
 
 # Get the absolute path of the current directory
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 def Ho():
-    st.title(":red[_Pneumpredict_]")
-    st.write(":grey[Web App for PNEUMonia PREDICTion using X-ray image classifications]")
+    st.title(":PNEUMONIA PREDICTION")
+    st.write(":WEB APPLICATION FOR PNEUMONIA PREDICTION USING X-RAY IMAGE CLASSIFICATION]")
 
     home_img_path = os.path.join(current_dir, 'web_img', 'home.jpg')
     if not os.path.exists(home_img_path):
@@ -26,7 +26,7 @@ def Ho():
         st.image(home_img, width=800)
 
 def Ab():
-    st.header(':red[What is Pneumonia?]')
+    st.header('What is Pneumonia?')
     video = "https://upload.wikimedia.org/wikipedia/commons/d/d5/En.Wikipedia-VideoWiki-Pneumonia.webm"
     st.video(video, format="video/mp4", start_time=0)
     st.write("Source and further reading available at https://en.wikipedia.org/wiki/Pneumonia")
@@ -48,7 +48,7 @@ def Ap():
             return
 
     def main():
-        st.header(":red[Pneumonia prediction using _Pneumpredict_]")
+        st.header("Pneumonia prediction")
 
     if __name__ == '__main__':
         main()
@@ -107,7 +107,7 @@ def Di():
     st.write('5. Uplodaded X-ray image is not retained by _Pneumpredict_.')
 
 def Ci():
-    st.header(':red[Dataset availibility & recommended resources:]')
+    st.header('Dataset availibility & recommended resources')
     st.subheader('')
     st.write("1. Dataset used for this project is available as [Chest X-ray Images at Kaggle](https://www.kaggle.com/datasets/paultimothymooney/chest-xray-pneumonia).")
     st.write("2. Above dataset is part of a [publication](https://www.cell.com/cell/fulltext/S0092-8674(18)30154-5), _Identifying Medical Diagnoses and Treatable Diseases by Image-Based Deep Learning_.")
@@ -115,7 +115,7 @@ def Ci():
     st.write("4. To implement TensorFlow in image classification, there is an amazing [tutorial](https://www.tensorflow.org/tutorials/images/classification).")
 
 def Me():
-    st.header(':red[About Project:]')
+    st.header('About Project')
     st.subheader('')
     st.write('Greetings! I am Aishwarya U ,Student at Bengaluru City University, This project deals with finding whether the person suffering with Pneumonia or not.')
    
