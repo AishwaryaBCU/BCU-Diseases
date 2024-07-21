@@ -1,13 +1,27 @@
+import os
 import streamlit as st
 import numpy as np
 import pandas as pd
 import pickle, json
-import os
 
-# Get the absolute path of the current directory
+# Debugging path
 current_dir = os.path.dirname(os.path.abspath(__file__))
-bg_path = os.path.join(current_dir, 'web_img', 'bg.jpg')
+print("Current Directory:", current_dir)
+assets_dir = os.path.join(current_dir, 'assets')
+print("Assets Directory:", assets_dir)
 
+column_info_path = os.path.join(assets_dir, 'column_info.json')
+
+try:
+    with open(column_info_path, 'r') as file:
+        column_info = json.load(file)
+except FileNotFoundError:
+    st.error(f"File not found: {column_info_path}")
+    raise
+
+# Set page configuration and other setup
+icon_path = os.path.join(current_dir, 'web_img', 'lungs_icon.png')
+bg_path = os.path.join(current_dir, 'web_img', 'bg.jpg')
 
 st.set_page_config(
     page_title="Chronic Kidney Disease Predictor",
@@ -15,7 +29,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# Inject custom CSS to add background image
 def set_background(bg_path):
     st.markdown(
         f"""
@@ -31,8 +44,8 @@ def set_background(bg_path):
         unsafe_allow_html=True
     )
 
-# Call the function to set the background
 set_background(bg_path)
+
 
 st.title('👨‍⚕️Chronic Kidney Disease Predictor')
 
