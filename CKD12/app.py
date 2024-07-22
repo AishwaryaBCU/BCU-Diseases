@@ -1,8 +1,9 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-import pickle, json
-import os
+import pickle
+import json
+import os  # Add this import
 
 st.set_page_config(
     page_title="Chronic Kidney Disease Predictor",
@@ -20,14 +21,11 @@ if 'omit_feat' not in st.session_state:
     st.session_state.omit_feat = []
     st.session_state.omit_feat_mat = np.zeros(total_features, dtype=bool)
 
-
-    
 column_info = {}
 base_dir = os.path.dirname(__file__)  # Gets the directory of the script
 column_info_path = os.path.join(base_dir, 'assets', 'column_info.json')
 with open(column_info_path, 'r') as file:
     column_info = json.load(file)
-
 
 labels = column_info['full']
 
@@ -84,8 +82,6 @@ with st.form("my_form"):
     
     predict_btn = st.form_submit_button("Predict")
 
-
-
 X[st.session_state.omit_feat] = np.nan
 X_proc = X.copy()
 
@@ -98,32 +94,22 @@ rename_dict = {labels[i]: cols[i] for i in range(len(labels))}
 X_proc.rename(columns=rename_dict, inplace=True)
 X_proc = X_proc.applymap(lambda s: s.lower().replace(' ', '') if type(s) == str else s)
 
-base_dir = os.path.dirname(__file__)  # Gets the directory of the script
-column_info_path = os.path.join(base_dir, 'assets', cat_imputer.pickle')
-with open(column_info_path, 'r') as file:
-    column_info = json.load(file)
+with open(os.path.join(base_dir, 'assets', 'cat_imputer.pickle'), 'rb') as file:
+    cat_imputer = pickle.load(file)
 
-
-
-base_dir = os.path.dirname(__file__)  # Gets the directory of the script
-column_info_path = os.path.join(base_dir, 'assets', cat_imputer.pickle')
-with open(column_info_path, 'r') as file:
-    column_info = json.load(file)
-
-
-with open('./assets/encoder.pickle', 'rb') as file:
+with open(os.path.join(base_dir, 'assets', 'encoder.pickle'), 'rb') as file:
     encoder = pickle.load(file)
 
-with open('./assets/cont_imputer.pickle', 'rb') as file:
+with open(os.path.join(base_dir, 'assets', 'cont_imputer.pickle'), 'rb') as file:
     cont_imputer = pickle.load(file)
 
-with open('./assets/scaler.pickle', 'rb') as file:
+with open(os.path.join(base_dir, 'assets', 'scaler.pickle'), 'rb') as file:
     scaler = pickle.load(file)
 
-with open('./assets/feat_extraction.pickle', 'rb') as file:
+with open(os.path.join(base_dir, 'assets', 'feat_extraction.pickle'), 'rb') as file:
     feat_extraction = pickle.load(file)
 
-with open('./assets/model.pickle', 'rb') as file:
+with open(os.path.join(base_dir, 'assets', 'model.pickle'), 'rb') as file:
     model = pickle.load(file)
 
 X_proc[column_info['cat_imputer']] = cat_imputer.transform(X_proc[column_info['cat_imputer']])
@@ -139,56 +125,9 @@ X_proc = feat_extraction.transform(X_proc)
 
 [y_pred] = model.predict(X_proc)
 
-
 if predict_btn:
-      
     st.header("🎯Prediction")
-
     if y_pred == 1:
         st.error("The Patient has Chronic Kidney Disease (CKD).", icon='🩺')
     else:
-       
         st.success("The Patient does not have Chronic Kidney Disease (CKD).", icon='🩺')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# import time
-
-# 'Starting a long computation...'
-
-# # Add a placeholder
-# latest_iteration = st.empty()
-# bar = st.progress(0)
-
-# for i in range(100):
-#   # Update the progress bar with each iteration.
-#   latest_iteration.text(f'Iteration {i+1}')
-#   bar.progress(i + 1)
-#   time.sleep(0.1)
