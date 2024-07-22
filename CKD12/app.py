@@ -109,7 +109,7 @@ try:
     with open(feat_extraction_path, 'rb') as file:
         feat_extraction = pickle.load(file)
     with open(model_path, 'rb') as file:
-        model = pickle.load(file)
+        CKD_model = pickle.load(file)
 except FileNotFoundError as e:
     st.error(f"File not found: {e.filename}")
     st.stop()
@@ -139,45 +139,45 @@ with st.empty():
     if len(st.session_state.omit_feat) > 0:
         st.info("The model can predict omitted features, bearing in mind that the accuracy may vary.", icon='📖')
 
-with st.form("my_form"):
-    cols = st.columns(4)
-    with cols[0]:
-        X[labels[0]] = st.slider(labels[0], min_value=0, max_value=120, value=50, disabled=st.session_state.omit_feat_mat[0])
-        X[labels[1]] = st.slider(labels[1], min_value=0, max_value=200, value=76, disabled=st.session_state.omit_feat_mat[1])
-        X[labels[2]] = st.select_slider(labels[2], options=[1.005, 1.010, 1.015, 1.020, 1.025], value=1.015, disabled=st.session_state.omit_feat_mat[2])
-        X[labels[3]] = st.select_slider(labels[3], options=[0, 1, 2, 3, 4, 5], value=1, disabled=st.session_state.omit_feat_mat[3])
-        X[labels[4]] = st.select_slider(labels[4], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[4])
+# Create input fields
+user_inputs = {}
+for idx, label in enumerate(labels):
+    if st.session_state.omit_feat_mat[idx]:
+        user_inputs[label] = None  # Assume that omitted features are not used for prediction
+    else:
+        if 'select_slider' in st.session_state and st.session_state.select_slider.get(label):
+            user_inputs[label] = st.session_state.select_slider[label]
+        else:
+            if 'selectbox' in st.session_state and st.session_state.selectbox.get(label):
+                user_inputs[label] = st.session_state.selectbox[label]
+            elif 'slider' in st.session_state and st.session_state.slider.get(label):
+                user_inputs[label] = st.session_state.slider[label]
+            else:
+                user_inputs[label] = st.slider(label, min_value=0, max_value=500, value=50)  # default value
 
-    with cols[1]:
-        X[labels[5]] = st.selectbox(labels[5], ('Normal', 'Abnormal'), disabled=st.session_state.omit_feat_mat[5])
-        X[labels[6]] = st.selectbox(labels[6], ('Normal', 'Abnormal'), disabled=st.session_state.omit_feat_mat[6])
-        X[labels[7]] = st.selectbox(labels[7], ('Not Present', 'Present'), disabled=st.session_state.omit_feat_mat[7])
-        X[labels[8]] = st.selectbox(labels[8], ('Not Present', 'Present'), disabled=st.session_state.omit_feat_mat[8])
-        X[labels[9]] = st.slider(labels[9], min_value=0, max_value=500, value=150, disabled=st.session_state.omit_feat_mat[9])
-        X[labels[10]] = st.slider(labels[10], min_value=0, max_value=500, value=100, disabled=st.session_state.omit_feat_mat[10])
+# Prediction button
+if st.button('CKD Test Result'):
+    try:
+        # Ensure the input DataFrame is in the correct format
+        user_input_df = pd.DataFrame([user_inputs], columns=labels)
+        
+        # Apply preprocessing
+        user_input_processed = user_input_df.copy()
+        # Assuming you have the preprocess functions
+        user_input_processed = cat_imputer.transform(user_input_processed)  # Example
+        user_input_processed = encoder.transform(user_input_processed)  # Example
+        user_input_processed = cont_imputer.transform(user_input_processed)  # Example
+        user_input_processed = scaler.transform(user_input_processed)  # Example
+        user_input_processed = feat_extraction.transform(user_input_processed)  # Example
 
-    with cols[2]:
-        X[labels[11]] = st.slider(labels[11], min_value=0.0, max_value=80.0, value=3.1, step=0.1, disabled=st.session_state.omit_feat_mat[11])
-        X[labels[12]] = st.slider(labels[12], min_value=0.0, max_value=180.0, value=137.5, step=0.5, disabled=st.session_state.omit_feat_mat[12])
-        X[labels[13]] = st.slider(labels[13], min_value=0.0, max_value=50.0, value=4.6, step=0.1, disabled=st.session_state.omit_feat_mat[13])
-        X[labels[14]] = st.slider(labels[14], min_value=0.0, max_value=20.0, value=12.6, step=0.1, disabled=st.session_state.omit_feat_mat[14])
-        X[labels[15]] = st.slider(labels[15], min_value=0, max_value=60, value=39, disabled=st.session_state.omit_feat_mat[15])
-        X[labels[16]] = st.slider(labels[16], min_value=0, max_value=17, value=15, disabled=st.session_state.omit_feat_mat[16])
-
-    with cols[3]:
-        X[labels[17]] = st.select_slider(labels[17], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[17])
-        X[labels[18]] = st.select_slider(labels[18], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[18])
-        X[labels[19]] = st.select_slider(labels[19], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[19])
-        X[labels[20]] = st.select_slider(labels[20], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[20])
-        X[labels[21]] = st.selectbox(labels[21], ('No', 'Yes'), disabled=st.session_state.omit_feat_mat[21])
-        X[labels[22]] = st.selectbox(labels[22], ('No', 'Yes'), disabled=st.session_state.omit_feat_mat[22])
-        X[labels[23]] = st.selectbox(labels[23], ('Good', 'Poor'), disabled=st.session_state.omit_feat_mat[23])
-
-    submit_button = st.form_submit_button("Submit")
-
-    if submit_button:
-        st.write("Form submitted!")
-        # Example prediction
-        # X_preprocessed = preprocess(X)  # Apply your preprocessing steps
-        # prediction = model.predict(X_preprocessed)
-        # st.write(f"Prediction: {prediction}")
+        # Make prediction
+        ckd_prediction = CKD_model.predict(user_input_processed)
+        if ckd_prediction[0] == 'ckd':
+            ckd_diagnosis = 'The person is likely to have Chronic Kidney Disease'
+        else:
+            ckd_diagnosis = 'The person is not likely to have Chronic Kidney Disease'
+        st.success(ckd_diagnosis)
+    except ValueError as ve:
+        st.error(f'Please enter valid numbers for all fields. ValueError: {ve}')
+    except Exception as e:
+        st.error(f'An error occurred: {str(e)}')
