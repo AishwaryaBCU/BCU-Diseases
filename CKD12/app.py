@@ -71,7 +71,7 @@ st.markdown("""
 
 # Path to the model file and other assets
 assets_dir = os.path.join(current_dir, 'assets')
-ckd_model_path = os.path.join(assets_dir, 'kidney.sav')
+ckd_model_path = os.path.join(assets_dir, 'model.pickle')
 
 # Debugging output to understand the file structure
 st.text(f"Current directory: {current_dir}")
