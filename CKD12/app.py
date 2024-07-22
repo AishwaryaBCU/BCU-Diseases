@@ -126,21 +126,6 @@ if selected == "CKD Prediction":
         except Exception as e:
             st.error(f'An error occurred: {str(e)}')
 
-import streamlit as st
-import numpy as np
-import pandas as pd
-import pickle
-import json
-import os
-import base64
-
-# Set page configuration
-st.set_page_config(
-    page_title="Chronic Kidney Disease Predictor",
-    page_icon="👨‍⚕️",
-    layout="wide"
-)
-
 # Function to set background image
 def set_page_background(image_path):
     @st.cache_data
@@ -171,21 +156,4 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 background_image_path = os.path.join(current_dir, 'bg.jpg')
 
 # Set background image
-set_page_background(background_image_path)
-
-# Add custom CSS to change font and background colors
-st.markdown("""
-    <style>
-    .stApp {
-        background-color: #f0f0f0;  /* Light gray background */
-    }
-    .stTitle, .stHeader, .stMarkdown, .stText {
-        color: #333;  /* Dark text color for visibility */
-    }
-    .stMarkdown {
-        background-color: rgba(255, 255, 255, 0.7);  /* Slightly transparent white background for text blocks */
-        padding: 15px;
-        border-radius: 8px;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+set_page_background(background
