@@ -56,8 +56,7 @@ fscore = f1_score(y_test,dt_pred_test)
 cm = confusion_matrix(y_test,dt_pred_test)
 accuracy = accuracy_score(y_test,dt_pred_test)
 
-################## Streamlit ###############
-st.title('_Big Brother messed up my data. My apps are not working properly_ :sunglasses:')
+
 
 header = st.beta_container()
 
@@ -82,13 +81,12 @@ st.markdown("""
 
 with header:
     st.title('Predicting Chronic Kidney Disease')
-    st.text('@Author: Thomas Nguyen Date: 28 Feb 2021')
+   
     image = Image.open('ckd.png')
     st.image(image)
 	
     st.text('CKD dataset from Kaggle: 400 x 25 features')
-    df
-    st.markdown(''':red[Big Brother messed up my data...All of my apps are not working properly.]''')
+
 	
      # plot some graphs:
     st.subheader('Hypertension and Diabetes vs. CKD:')
