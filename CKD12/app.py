@@ -13,6 +13,9 @@ st.set_page_config(
     layout="wide"
 )
 
+
+# Print the current working directory
+print("Current working directory:", os.getcwd())
 # Get the base directory
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
