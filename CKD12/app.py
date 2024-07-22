@@ -29,7 +29,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.title('👨‍⚕️ Chronic Kidney Disease Predictor')
+st.title('Chronic Kidney Disease Predictor')
 
 st.markdown("Chronic Kidney Disease (CKD) is a condition where your kidneys don't work as well as they should for a long time. It can make you feel tired, swollen, or have trouble thinking clearly. This web app predicts if a patient has **Chronic Kidney Disease (CKD)** based on the patient's data.")
 
