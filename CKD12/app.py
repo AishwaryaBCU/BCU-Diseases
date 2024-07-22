@@ -73,7 +73,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # File paths
-assets_dir = os.path.join(current_dir, 'CKD12')
+assets_dir = os.path.join(current_dir, 'assets')
 column_info_path = os.path.join(assets_dir, 'column_info.json')
 cat_imputer_path = os.path.join(assets_dir, 'cat_imputer.pickle')
 encoder_path = os.path.join(assets_dir, 'encoder.pickle')
@@ -81,6 +81,12 @@ cont_imputer_path = os.path.join(assets_dir, 'cont_imputer.pickle')
 scaler_path = os.path.join(assets_dir, 'scaler.pickle')
 feat_extraction_path = os.path.join(assets_dir, 'feat_extraction.pickle')
 model_path = os.path.join(assets_dir, 'model.pickle')
+
+# Debugging output to understand the file structure
+st.text(f"Current directory: {current_dir}")
+st.text(f"Assets directory: {assets_dir}")
+st.text(f"Contents of the current directory: {os.listdir(current_dir)}")
+st.text(f"Contents of the assets directory: {os.listdir(assets_dir)}")
 
 # Check if column_info.json file exists
 if not os.path.exists(column_info_path):
@@ -155,7 +161,7 @@ with st.form("my_form"):
 
     with cols[3]:
         X[labels[16]] = st.select_slider(labels[16], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[16])
-        X[labels[17]] = st.select_slider(labels[17], options=[0, 1, 2, 3, 4, 5], value=1, disabled=st.session_state.omit_feat_mat[17])
+        X[labels[17]] = st.select_slider(labels[17], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[17])
         X[labels[18]] = st.select_slider(labels[18], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[18])
         X[labels[19]] = st.select_slider(labels[19], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[19])
         X[labels[20]] = st.select_slider(labels[20], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[20])
