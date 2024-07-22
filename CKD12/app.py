@@ -14,8 +14,7 @@ st.set_page_config(
 )
 
 
-# Print the current working directory
-print("Current working directory:", os.getcwd())
+base_dir = os.getcwd() 
 # Get the base directory
 base_dir = os.path.dirname(os.path.abspath(__file__))
 
