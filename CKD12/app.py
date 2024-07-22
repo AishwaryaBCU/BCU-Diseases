@@ -1,131 +1,17 @@
-import os
-import pickle
 import streamlit as st
-from streamlit_option_menu import option_menu
+import numpy as np
+import pandas as pd
+import pickle
+import json
+import os
 import base64
 
 # Set page configuration
-st.set_page_config(page_title="Health Assistant",
-                   layout="wide",
-                   page_icon="🧑‍⚕️")
-
-# Getting the working directory of the app.py
-working_dir = os.path.dirname(os.path.abspath(__file__))
-
-# Path to the model file
-ckd_model_path = os.path.join(working_dir, 'kidney.sav')
-
-# Load the pre-trained model
-with open(ckd_model_path, 'rb') as model_file:
-    CKD_model = pickle.load(model_file)
-
-# Sample values from the provided data
-sample_values = {
-    "age": 48, "bp": 70, "sg": 1.005, "al": 4, "su": 0, "rbc": 'normal', "pc": 'abnormal',
-    "pcc": 'present', "ba": 'notpresent', "bgr": 117, "bu": 56, "sc": 3.8, "sod": 111,
-    "pot": 2.5, "hemo": 11.2, "pcv": 32, "wc": 6700, "rc": 3.9, "htn": 'yes', "dm": 'no',
-    "cad": 'no', "appet": 'poor', "pe": 'yes', "ane": 'yes'
-}
-
-# Sidebar for navigation
-with st.sidebar:
-    selected = option_menu('Health Assistant',
-                           ['CKD Prediction'],
-                           menu_icon='hospital-fill',
-                           icons=['activity'],
-                           default_index=0)
-
-# CKD Prediction Page
-if selected == "CKD Prediction":
-    st.title('Chronic Kidney Disease (CKD) Prediction using ML')
-
-    # Input fields
-    col1, col2, col3, col4, col5 = st.columns(5)
-    with col1:
-        age = st.number_input('Age', value=sample_values['age'])
-    with col2:
-        bp = st.number_input('Blood Pressure', value=sample_values['bp'])
-    with col3:
-        sg = st.number_input('Specific Gravity', value=sample_values['sg'])
-    with col4:
-        al = st.number_input('Albumin', value=sample_values['al'])
-    with col5:
-        su = st.number_input('Sugar', value=sample_values['su'])
-       
-    with col1:
-        rbc = st.selectbox('Red Blood Cells', ['normal', 'abnormal'], index=0 if sample_values['rbc'] == 'normal' else 1)
-    with col2:
-        pc = st.selectbox('Pus Cell', ['normal', 'abnormal'], index=0 if sample_values['pc'] == 'normal' else 1)
-    with col3:
-        pcc = st.selectbox('Pus Cell Clumps', ['notpresent', 'present'], index=0 if sample_values['pcc'] == 'notpresent' else 1)
-    with col4:
-        ba = st.selectbox('Bacteria', ['notpresent', 'present'], index=0 if sample_values['ba'] == 'notpresent' else 1)
-    with col5:
-        bgr = st.number_input('Blood Glucose Random', value=sample_values['bgr'])
-        
-    with col1:
-        bu = st.number_input('Blood Urea', value=sample_values['bu'])
-    with col2:
-        sc = st.number_input('Serum Creatinine', value=sample_values['sc'])
-    with col3:
-        sod = st.number_input('Sodium', value=sample_values['sod'])
-    with col4:
-        pot = st.number_input('Potassium', value=sample_values['pot'])
-    with col5:
-        hemo = st.number_input('Hemoglobin', value=sample_values['hemo'])
-         
-    with col1:
-        pcv = st.number_input('Packed Cell Volume', value=sample_values['pcv'])
-    with col2:
-        wc = st.number_input('White Blood Cell Count', value=sample_values['wc'])
-    with col3:
-        rc = st.number_input('Red Blood Cell Count', value=sample_values['rc'])
-    with col4:
-        htn = st.selectbox('Hypertension', ['yes', 'no'], index=0 if sample_values['htn'] == 'yes' else 1)
-    with col5:
-        dm = st.selectbox('Diabetes Mellitus', ['yes', 'no'], index=0 if sample_values['dm'] == 'yes' else 1)
-    
-    with col1:
-        cad = st.selectbox('Coronary Artery Disease', ['yes', 'no'], index=0 if sample_values['cad'] == 'yes' else 1)
-    with col2:
-        appet = st.selectbox('Appetite', ['good', 'poor'], index=0 if sample_values['appet'] == 'good' else 1)
-    with col3:
-        pe = st.selectbox('Pedal Edema', ['yes', 'no'], index=0 if sample_values['pe'] == 'yes' else 1)
-    with col4:
-        ane = st.selectbox('Anemia', ['yes', 'no'], index=0 if sample_values['ane'] == 'yes' else 1)
-
-    # Convert categorical variables to numerical values
-    rbc = 1 if rbc == 'abnormal' else 0
-    pc = 1 if pc == 'abnormal' else 0
-    pcc = 1 if pcc == 'present' else 0
-    ba = 1 if ba == 'present' else 0
-    htn = 1 if htn == 'yes' else 0
-    dm = 1 if dm == 'yes' else 0
-    cad = 1 if cad == 'yes' else 0
-    appet = 1 if appet == 'good' else 0
-    pe = 1 if pe == 'yes' else 0
-    ane = 1 if ane == 'yes' else 0
-
-    # Collect user inputs
-    user_input = [age, bp, sg, al, su, rbc, pc, pcc, ba, bgr, bu, sc, sod, pot, hemo, pcv, wc, rc, htn, dm, cad, appet, pe, ane]
-
-    ckd_prediction = ''
-    if st.button('CKD Test Result'):
-        try:
-            # Ensure all inputs are in the correct format
-            user_input = [float(feature) for feature in user_input]
-
-            # Make prediction
-            ckd_prediction = CKD_model.predict([user_input])
-            if ckd_prediction[0] == 'ckd':
-                ckd_diagnosis = 'The person is likely to have Chronic Kidney Disease'
-            else:
-                ckd_diagnosis = 'The person is not likely to have Chronic Kidney Disease'
-            st.success(ckd_diagnosis)
-        except ValueError as ve:
-            st.error(f'Please enter valid numbers for all fields. ValueError: {ve}')
-        except Exception as e:
-            st.error(f'An error occurred: {str(e)}')
+st.set_page_config(
+    page_title="Chronic Kidney Disease Predictor",
+    page_icon="👨‍⚕️",
+    layout="wide"
+)
 
 # Function to set background image
 def set_page_background(image_path):
@@ -158,3 +44,140 @@ background_image_path = os.path.join(current_dir, 'bg.jpg')
 
 # Set background image
 set_page_background(background_image_path)
+
+# Add custom CSS to change font and background colors
+st.markdown("""
+    <style>
+    .stApp {
+        background-color: #f0f0f0;  /* Light gray background */
+    }
+    .stTitle, .stHeader, .stMarkdown, .stText {
+        color: #333;  /* Dark text color for visibility */
+    }
+    .stMarkdown {
+        background-color: rgba(255, 255, 255, 0.7);  /* Slightly transparent white background for text blocks */
+        padding: 15px;
+        border-radius: 8px;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# Title
+st.title('👨‍⚕️ Chronic Kidney Disease Predictor')
+
+# Description
+st.markdown("""
+    <div class="stMarkdown">
+    **Chronic Kidney Disease (CKD)** is a condition where your kidneys don't work as well as they should for a long time. It can make you feel tired, swollen, or have trouble thinking clearly. This web app predicts if a patient has **Chronic Kidney Disease (CKD)** based on the patient's data.
+    </div>
+""", unsafe_allow_html=True)
+
+# File paths
+assets_dir = os.path.join(current_dir, 'assets')
+column_info_path = os.path.join(assets_dir, 'column_info.json')
+cat_imputer_path = os.path.join(assets_dir, 'cat_imputer.pickle')
+encoder_path = os.path.join(assets_dir, 'encoder.pickle')
+cont_imputer_path = os.path.join(assets_dir, 'cont_imputer.pickle')
+scaler_path = os.path.join(assets_dir, 'scaler.pickle')
+feat_extraction_path = os.path.join(assets_dir, 'feat_extraction.pickle')
+model_path = os.path.join(assets_dir, 'model.pickle')
+
+# Debugging output to understand the file structure
+st.text(f"Current directory: {current_dir}")
+st.text(f"Assets directory: {assets_dir}")
+st.text(f"Contents of the current directory: {os.listdir(current_dir)}")
+st.text(f"Contents of the assets directory: {os.listdir(assets_dir)}")
+
+# Check if column_info.json file exists
+if not os.path.exists(column_info_path):
+    st.error(f"File not found: {column_info_path}")
+    st.stop()
+
+with open(column_info_path, 'r') as file:
+    column_info = json.load(file)
+
+# Load model and preprocessing objects
+try:
+    with open(cat_imputer_path, 'rb') as file:
+        cat_imputer = pickle.load(file)
+    with open(encoder_path, 'rb') as file:
+        encoder = pickle.load(file)
+    with open(cont_imputer_path, 'rb') as file:
+        cont_imputer = pickle.load(file)
+    with open(scaler_path, 'rb') as file:
+        scaler = pickle.load(file)
+    with open(feat_extraction_path, 'rb') as file:
+        feat_extraction = pickle.load(file)
+    with open(model_path, 'rb') as file:
+        model = pickle.load(file)
+except FileNotFoundError as e:
+    st.error(f"File not found: {e.filename}")
+    st.stop()
+
+# Total features and labels
+total_features = 24
+labels = column_info['full']
+
+# Initialize DataFrame
+X = pd.DataFrame(np.empty((1, total_features)), columns=labels)
+
+def disable_widgets():
+    st.session_state.omit_feat_mat = np.zeros(total_features, dtype=bool)
+    indices = [labels.index(item) for item in st.session_state.omit_feat if item in labels]
+    st.session_state.omit_feat_mat[indices] = True
+
+# Ensure st.session_state.omit_feat_mat is initialized
+if 'omit_feat_mat' not in st.session_state:
+    st.session_state.omit_feat_mat = np.zeros(total_features, dtype=bool)
+
+st.header("Input the Patient's Data")
+omit_feat = st.multiselect("Select the features you don't know", labels, 
+                            placeholder="Omitted Features ex. Potassium (I don't know the potassium level).",
+                            key="omit_feat", on_change=disable_widgets)
+
+with st.empty():
+    if len(st.session_state.omit_feat) > 0:
+        st.info("The model can predict omitted features, bearing in mind that the accuracy may vary.", icon='📖')
+
+with st.form("my_form"):
+    cols = st.columns(4)
+    with cols[0]:
+        X[labels[0]] = st.slider(labels[0], min_value=0, max_value=120, value=50, disabled=st.session_state.omit_feat_mat[0])
+        X[labels[1]] = st.slider(labels[1], min_value=0, max_value=200, value=76, disabled=st.session_state.omit_feat_mat[1])
+        X[labels[2]] = st.select_slider(labels[2], options=[1.005, 1.010, 1.015, 1.020, 1.025], value=1.015, disabled=st.session_state.omit_feat_mat[2])
+        X[labels[3]] = st.select_slider(labels[3], options=[0, 1, 2, 3, 4, 5], value=1, disabled=st.session_state.omit_feat_mat[3])
+        X[labels[4]] = st.select_slider(labels[4], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[4])
+
+    with cols[1]:
+        X[labels[5]] = st.selectbox(labels[5], ('Normal', 'Abnormal'), disabled=st.session_state.omit_feat_mat[5])
+        X[labels[6]] = st.selectbox(labels[6], ('Normal', 'Abnormal'), disabled=st.session_state.omit_feat_mat[6])
+        X[labels[7]] = st.selectbox(labels[7], ('Not Present', 'Present'), disabled=st.session_state.omit_feat_mat[7])
+        X[labels[8]] = st.selectbox(labels[8], ('Not Present', 'Present'), disabled=st.session_state.omit_feat_mat[8])
+        X[labels[9]] = st.slider(labels[9], min_value=0, max_value=500, value=150, disabled=st.session_state.omit_feat_mat[9])
+        X[labels[10]] = st.slider(labels[10], min_value=0, max_value=500, value=100, disabled=st.session_state.omit_feat_mat[10])
+
+    with cols[2]:
+        X[labels[11]] = st.slider(labels[11], min_value=0.0, max_value=80.0, value=3.1, step=0.1, disabled=st.session_state.omit_feat_mat[11])
+        X[labels[12]] = st.slider(labels[12], min_value=0.0, max_value=180.0, value=137.5, step=0.5, disabled=st.session_state.omit_feat_mat[12])
+        X[labels[13]] = st.slider(labels[13], min_value=0.0, max_value=50.0, value=4.6, step=0.1, disabled=st.session_state.omit_feat_mat[13])
+        X[labels[14]] = st.slider(labels[14], min_value=0.0, max_value=20.0, value=12.6, step=0.1, disabled=st.session_state.omit_feat_mat[14])
+        X[labels[15]] = st.slider(labels[15], min_value=0, max_value=60, value=39, disabled=st.session_state.omit_feat_mat[15])
+        X[labels[16]] = st.slider(labels[16], min_value=0, max_value=17, value=15, disabled=st.session_state.omit_feat_mat[16])
+
+    with cols[3]:
+        X[labels[17]] = st.select_slider(labels[17], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[17])
+        X[labels[18]] = st.select_slider(labels[18], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[18])
+        X[labels[19]] = st.select_slider(labels[19], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[19])
+        X[labels[20]] = st.select_slider(labels[20], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[20])
+        X[labels[21]] = st.selectbox(labels[21], ('No', 'Yes'), disabled=st.session_state.omit_feat_mat[21])
+        X[labels[22]] = st.selectbox(labels[22], ('No', 'Yes'), disabled=st.session_state.omit_feat_mat[22])
+        X[labels[23]] = st.selectbox(labels[23], ('Good', 'Poor'), disabled=st.session_state.omit_feat_mat[23])
+
+    submit_button = st.form_submit_button("Submit")
+
+    if submit_button:
+        st.write("Form submitted!")
+        # Example prediction
+        # X_preprocessed = preprocess(X)  # Apply your preprocessing steps
+        # prediction = model.predict(X_preprocessed)
+        # st.write(f"Prediction: {prediction}")
