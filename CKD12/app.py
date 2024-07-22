@@ -15,7 +15,7 @@ st.set_page_config(
 
 # Function to set background image
 def set_page_background(image_path):
-    @st.cache(suppress_st_warning=True)
+    @st.cache_data
     def get_base64_of_bin_file(filename):
         with open(filename, 'rb') as f:
             data = f.read()
@@ -146,11 +146,27 @@ with st.form("my_form"):
         X[labels[9]] = st.slider(labels[9], min_value=0, max_value=500, value=150, disabled=st.session_state.omit_feat_mat[9])
         X[labels[10]] = st.slider(labels[10], min_value=0, max_value=500, value=100, disabled=st.session_state.omit_feat_mat[10])
 
+    with cols[2]:
+        X[labels[11]] = st.slider(labels[11], min_value=0.0, max_value=80.0, value=3.1, step=0.1, disabled=st.session_state.omit_feat_mat[11])
+        X[labels[12]] = st.slider(labels[12], min_value=0.0, max_value=180.0, value=137.5, step=0.5, disabled=st.session_state.omit_feat_mat[12])
+        X[labels[13]] = st.slider(labels[13], min_value=0.0, max_value=50.0, value=4.6, step=0.1, disabled=st.session_state.omit_feat_mat[13])
+        X[labels[14]] = st.slider(labels[14], min_value=0.0, max_value=20.0, value=12.6, step=0.1, disabled=st.session_state.omit_feat_mat[14])
+        X[labels[15]] = st.slider(labels[15], min_value=0, max_value=60, value=39, disabled=st.session_state.omit_feat_mat[15])
+
+    with cols[3]:
+        X[labels[16]] = st.select_slider(labels[16], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[16])
+        X[labels[17]] = st.select_slider(labels[17], options=[0, 1, 2, 3, 4, 5], value=1, disabled=st.session_state.omit_feat_mat[17])
+        X[labels[18]] = st.select_slider(labels[18], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[18])
+        X[labels[19]] = st.select_slider(labels[19], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[19])
+        X[labels[20]] = st.select_slider(labels[20], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[20])
+        X[labels[21]] = st.selectbox(labels[21], ('No', 'Yes'), disabled=st.session_state.omit_feat_mat[21])
+        X[labels[22]] = st.selectbox(labels[22], ('No', 'Yes'), disabled=st.session_state.omit_feat_mat[22])
+        X[labels[23]] = st.selectbox(labels[23], ('Good', 'Poor'), disabled=st.session_state.omit_feat_mat[23])
+
     # Add more input fields as needed
     submit_button = st.form_submit_button("Submit")
 
     if submit_button:
-        # Your prediction logic here
         st.write("Form submitted!")
         # Example prediction
         # X_preprocessed = preprocess(X)  # Apply your preprocessing steps
