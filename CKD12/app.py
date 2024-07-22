@@ -126,6 +126,10 @@ def disable_widgets():
     indices = [labels.index(item) for item in st.session_state.omit_feat if item in labels]
     st.session_state.omit_feat_mat[indices] = True
 
+# Ensure st.session_state.omit_feat_mat is initialized
+if 'omit_feat_mat' not in st.session_state:
+    st.session_state.omit_feat_mat = np.zeros(total_features, dtype=bool)
+
 st.header("Input the Patient's Data")
 omit_feat = st.multiselect("Select the features you don't know", labels, 
                             placeholder="Omitted Features ex. Potassium (I don't know the potassium level).",
@@ -158,9 +162,9 @@ with st.form("my_form"):
         X[labels[13]] = st.slider(labels[13], min_value=0.0, max_value=50.0, value=4.6, step=0.1, disabled=st.session_state.omit_feat_mat[13])
         X[labels[14]] = st.slider(labels[14], min_value=0.0, max_value=20.0, value=12.6, step=0.1, disabled=st.session_state.omit_feat_mat[14])
         X[labels[15]] = st.slider(labels[15], min_value=0, max_value=60, value=39, disabled=st.session_state.omit_feat_mat[15])
+        X[labels[16]] = st.slider(labels[16], min_value=0, max_value=17, value=15, disabled=st.session_state.omit_feat_mat[16])
 
     with cols[3]:
-        X[labels[16]] = st.select_slider(labels[16], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[16])
         X[labels[17]] = st.select_slider(labels[17], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[17])
         X[labels[18]] = st.select_slider(labels[18], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[18])
         X[labels[19]] = st.select_slider(labels[19], options=[0, 1, 2, 3, 4, 5], value=0, disabled=st.session_state.omit_feat_mat[19])
@@ -169,7 +173,6 @@ with st.form("my_form"):
         X[labels[22]] = st.selectbox(labels[22], ('No', 'Yes'), disabled=st.session_state.omit_feat_mat[22])
         X[labels[23]] = st.selectbox(labels[23], ('Good', 'Poor'), disabled=st.session_state.omit_feat_mat[23])
 
-    # Add more input fields as needed
     submit_button = st.form_submit_button("Submit")
 
     if submit_button:
