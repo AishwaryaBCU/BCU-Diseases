@@ -98,9 +98,18 @@ rename_dict = {labels[i]: cols[i] for i in range(len(labels))}
 X_proc.rename(columns=rename_dict, inplace=True)
 X_proc = X_proc.applymap(lambda s: s.lower().replace(' ', '') if type(s) == str else s)
 
+base_dir = os.path.dirname(__file__)  # Gets the directory of the script
+column_info_path = os.path.join(base_dir, 'assets', cat_imputer.pickle')
+with open(column_info_path, 'r') as file:
+    column_info = json.load(file)
 
-with open('./assets/cat_imputer.pickle', 'rb') as file:
-    cat_imputer = pickle.load(file)
+
+
+base_dir = os.path.dirname(__file__)  # Gets the directory of the script
+column_info_path = os.path.join(base_dir, 'assets', cat_imputer.pickle')
+with open(column_info_path, 'r') as file:
+    column_info = json.load(file)
+
 
 with open('./assets/encoder.pickle', 'rb') as file:
     encoder = pickle.load(file)
