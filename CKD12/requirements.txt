@@ -1,5 +1,0 @@
-﻿streamlit
-numpy
-pandas
-scikit-learn
-streamlit-option-menu
