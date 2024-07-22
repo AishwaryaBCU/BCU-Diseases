@@ -4,6 +4,7 @@ import pandas as pd
 import pickle
 import json
 import os
+import base64
 
 # Set up the Streamlit app configuration
 st.set_page_config(
