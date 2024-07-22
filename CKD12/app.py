@@ -11,6 +11,24 @@ st.set_page_config(
     layout="wide"
 )
 
+# Add custom CSS for background image
+st.markdown(
+    f"""
+    <style>
+    .reportview-container {{
+        background: url("assets/bg.webp");
+        background-size: cover;
+        background-position: center;
+    }}
+    .sidebar .sidebar-content {{
+        background: rgba(255, 255, 255, 0.8);
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+
 st.title('👨‍⚕️ Chronic Kidney Disease Predictor')
 
 st.markdown("Chronic Kidney Disease (CKD) is a condition where your kidneys don't work as well as they should for a long time. It can make you feel tired, swollen, or have trouble thinking clearly. This web app predicts if a patient has **Chronic Kidney Disease (CKD)** based on the patient's data.")
