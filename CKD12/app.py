@@ -5,10 +5,28 @@ import pickle
 import json
 import os
 
+# Set up the Streamlit app configuration
 st.set_page_config(
     page_title="Chronic Kidney Disease Predictor",
     page_icon="👨‍⚕️",
     layout="wide"
+)
+
+# Add custom CSS for background image
+st.markdown(
+    f"""
+    <style>
+    .reportview-container {{
+        background: url("assets/bg.webp");
+        background-size: cover;
+        background-position: center;
+    }}
+    .sidebar .sidebar-content {{
+        background: rgba(255, 255, 255, 0.8);
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True
 )
 
 st.title('👨‍⚕️ Chronic Kidney Disease Predictor')
