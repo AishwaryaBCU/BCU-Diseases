@@ -17,7 +17,7 @@ st.markdown(
     """
     <style>
     .reportview-container {
-        background: url("src/mount/BCU-Diseases/CKD12/bg.webp") no-repeat center center fixed;
+        background: url("/mount/src/bcu-diseases/CKD12/bg.webp") no-repeat center center fixed;
         background-size: cover;
         background-color: #f0f0f0; /* Fallback color */
     }
