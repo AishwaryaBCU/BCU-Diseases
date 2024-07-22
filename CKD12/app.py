@@ -11,7 +11,7 @@ st.set_page_config(
 
 st.title('👨‍⚕️Chronic Kidney Disease Predictor')
 
-st.markdown("**Chronic Kidney Disease (CKD)** is a condition where your kidneys don't work as well as they should for a long time. It can make you feel tired, swollen, or have trouble thinking clearly. This web app predicts if a patient has **Chronic Kidney Disease (CKD)** based on the patient's data.")
+st.markdown("Chronic Kidney Disease (CKD) is a condition where your kidneys don't work as well as they should for a long time. It can make you feel tired, swollen, or have trouble thinking clearly. This web app predicts if a patient has **Chronic Kidney Disease (CKD)** based on the patient's data.")
 
 total_features = 24
 
@@ -19,9 +19,14 @@ if 'omit_feat' not in st.session_state:
     st.session_state.omit_feat = []
     st.session_state.omit_feat_mat = np.zeros(total_features, dtype=bool)
 
+
+    
 column_info = {}
-with open('./assets/column_info.json', 'r') as file:
+base_dir = os.path.dirname(__file__)  # Gets the directory of the script
+column_info_path = os.path.join(base_dir, 'assets', 'column_info.json')
+with open(column_info_path, 'r') as file:
     column_info = json.load(file)
+
 
 labels = column_info['full']
 
