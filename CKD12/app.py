@@ -28,8 +28,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
-st.title('👨‍⚕️ Chronic Kidney Disease Predictor')
+st.title('👨‍⚕️Chronic Kidney Disease Predictor')
 
 st.markdown("Chronic Kidney Disease (CKD) is a condition where your kidneys don't work as well as they should for a long time. It can make you feel tired, swollen, or have trouble thinking clearly. This web app predicts if a patient has **Chronic Kidney Disease (CKD)** based on the patient's data.")
 
@@ -39,15 +38,14 @@ if 'omit_feat' not in st.session_state:
     st.session_state.omit_feat = []
     st.session_state.omit_feat_mat = np.zeros(total_features, dtype=bool)
 
-# Get the base directory
-base_dir = os.path.dirname(os.path.abspath(__file__))
-
-# Load column info
+column_info = {}
+base_dir = os.path.dirname(__file__)
 column_info_path = os.path.join(base_dir, 'assets', 'column_info.json')
 with open(column_info_path, 'r') as file:
     column_info = json.load(file)
 
 labels = column_info['full']
+
 X = pd.DataFrame(np.empty((1, total_features)), columns=labels)
 
 def disable_widgets():
@@ -57,7 +55,7 @@ def disable_widgets():
 
 st.header("Input the Patient's Data")
 omit_feat = st.multiselect("Select the features you don't know", labels, 
-                            placeholder="Omitted Features e.g. Potassium (I don't know the potassium level).",
+                            placeholder="Ommited Features ex. Potassium (i don't know the potassium level).",
                             key="omit_feat", on_change=disable_widgets)
 
 with st.empty():
@@ -100,55 +98,52 @@ with st.form("my_form"):
     
     predict_btn = st.form_submit_button("Predict")
 
+X[st.session_state.omit_feat] = np.nan
+X_proc = X.copy()
+
+cols = ['age', 'bp', 'sg', 'al', 'su', 'rbc', 'pc', 'pcc', 'ba',
+        'bgr', 'bu',  'sc', 'sod', 'pot', 'hemo', 'pcv', 'wbcc',
+        'rbcc', 'htn', 'dm', 'cad', 'appet', 'pe', 'ane']
+
+rename_dict = {labels[i]: cols[i] for i in range(len(labels))}
+
+X_proc.rename(columns=rename_dict, inplace=True)
+X_proc = X_proc.applymap(lambda s: s.lower().replace(' ', '') if type(s) == str else s)
+
+with open(os.path.join(base_dir, 'assets', 'cat_imputer.pickle'), 'rb') as file:
+    cat_imputer = pickle.load(file)
+
+with open(os.path.join(base_dir, 'assets', 'encoder.pickle'), 'rb') as file:
+    encoder = pickle.load(file)
+
+with open(os.path.join(base_dir, 'assets', 'cont_imputer.pickle'), 'rb') as file:
+    cont_imputer = pickle.load(file)
+
+with open(os.path.join(base_dir, 'assets', 'scaler.pickle'), 'rb') as file:
+    scaler = pickle.load(file)
+
+with open(os.path.join(base_dir, 'assets', 'feat_extraction.pickle'), 'rb') as file:
+    feat_extraction = pickle.load(file)
+
+with open(os.path.join(base_dir, 'assets', 'model.pickle'), 'rb') as file:
+    model = pickle.load(file)
+
+X_proc[column_info['cat_imputer']] = cat_imputer.transform(X_proc[column_info['cat_imputer']])
+
+X_proc[column_info['encoder']] = encoder.transform(X_proc[column_info['encoder']])
+
+X_proc = cont_imputer.transform(X_proc)
+X_proc = pd.DataFrame(X_proc, columns=column_info['abbrev'])
+
+X_proc[column_info['scaler']] = scaler.transform(X_proc)
+
+X_proc = feat_extraction.transform(X_proc)
+
+[y_pred] = model.predict(X_proc)
+
 if predict_btn:
-    # Handle omitted features
-    X[st.session_state.omit_feat] = np.nan
-    X_proc = X.copy()
-
-    # Define the correct column names
-    cols = ['age', 'bp', 'sg', 'al', 'su', 'rbc', 'pc', 'pcc', 'ba',
-            'bgr', 'bu',  'sc', 'sod', 'pot', 'hemo', 'pcv', 'wbcc',
-            'rbcc', 'htn', 'dm', 'cad', 'appet', 'pe', 'ane']
-
-    rename_dict = {labels[i]: cols[i] for i in range(len(labels))}
-    X_proc.rename(columns=rename_dict, inplace=True)
-
-    # Apply preprocessing
-    X_proc = X_proc.applymap(lambda s: s.lower().replace(' ', '') if isinstance(s, str) else s)
-
-    # Load preprocessing objects
-    with open(os.path.join(base_dir, 'assets', 'cat_imputer.pickle'), 'rb') as file:
-        cat_imputer = pickle.load(file)
-
-    with open(os.path.join(base_dir, 'assets', 'encoder.pickle'), 'rb') as file:
-        encoder = pickle.load(file)
-
-    with open(os.path.join(base_dir, 'assets', 'cont_imputer.pickle'), 'rb') as file:
-        cont_imputer = pickle.load(file)
-
-    with open(os.path.join(base_dir, 'assets', 'scaler.pickle'), 'rb') as file:
-        scaler = pickle.load(file)
-
-    with open(os.path.join(base_dir, 'assets', 'feat_extraction.pickle'), 'rb') as file:
-        feat_extraction = pickle.load(file)
-
-    with open(os.path.join(base_dir, 'assets', 'model.pickle'), 'rb') as file:
-        model = pickle.load(file)
-
-    # Preprocess the data
-    X_proc[column_info['cat_imputer']] = cat_imputer.transform(X_proc[column_info['cat_imputer']])
-    X_proc[column_info['encoder']] = encoder.transform(X_proc[column_info['encoder']])
-    X_proc = cont_imputer.transform(X_proc)
-    X_proc = pd.DataFrame(X_proc, columns=column_info['abbrev'])
-    X_proc[column_info['scaler']] = scaler.transform(X_proc[column_info['scaler']])
-    X_proc = feat_extraction.transform(X_proc)
-
-    # Make prediction
-    y_pred = model.predict(X_proc)
-
-    # Display the result
-    st.header("🎯 Prediction")
-    if y_pred[0] == 1:
+    st.header("🎯Prediction")
+    if y_pred == 1:
         st.error("The Patient has Chronic Kidney Disease (CKD).", icon='🩺')
     else:
         st.success("The Patient does not have Chronic Kidney Disease (CKD).", icon='🩺')
