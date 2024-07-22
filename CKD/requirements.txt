@@ -1,0 +1,8 @@
+pandas==1.1.3
+numpy==1.19.2
+streamlit==0.77.0
+matplotlib==3.3.2
+seaborn==0.11.0
+Pillow==8.1.2
+scikit_learn==0.24.1
+imbalanced-learn==0.8.0
