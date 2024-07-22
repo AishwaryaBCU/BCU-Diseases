@@ -12,26 +12,33 @@ st.set_page_config(
     layout="wide"
 )
 
-# Add custom CSS for background image
-st.markdown(
-    """
-    <style>
-    .reportview-container {
-        background: url("src/mount/BCU-Diseases/CKD12/bg.webp") no-repeat center center fixed;
-        background-size: cover;
-        background-color: #f0f0f0; /* Fallback color */
-    }
-    .sidebar .sidebar-content {
-        background: rgba(255, 255, 255, 0.8);
-    }
-    .sidebar .sidebar-content .sidebar-menu {
-        color: #000;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+# Function to set background image
+def set_page_background(image_path):
+    @st.cache_data
+    def get_base64_of_bin_file(filename):
+        with open(filename, 'rb') as f:
+            data = f.read()
+        return base64.b64encode(data).decode()
 
+    if os.path.exists(image_path):
+        bin_str = get_base64_of_bin_file(image_path)
+        page_bg_img = f'''
+            <style>
+            .stApp {{
+                background-image: url("data:image/webp;base64,{bin_str}");
+                background-size: cover;
+            }}
+            </style>
+        '''
+        st.markdown(page_bg_img, unsafe_allow_html=True)
+    else:
+        st.warning(f"Background image file '{image_path}' not found.")
+        st.text(f"Current working directory: {os.getcwd()}")
+        st.text(f"Contents of the current directory: {os.listdir(os.getcwd())}")
+
+# Set background image path
+background_image_path = 'CKD12/bg.webp'
+set_page_background(background_image_path)
 # Home Page
 def home_page():
     st.title("Welcome to the Chronic Kidney Disease Predictor")
