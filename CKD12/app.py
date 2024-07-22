@@ -5,7 +5,6 @@ import pickle
 import json
 import os
 
-
 # Set up the Streamlit app configuration
 st.set_page_config(
     page_title="Chronic Kidney Disease Predictor",
@@ -13,31 +12,21 @@ st.set_page_config(
     layout="wide"
 )
 
-
-base_dir = os.getcwd() 
-# Print the current working directory
-print("Current working directory:", os.getcwd())
-# Get the base directory
-base_dir = os.path.dirname(os.path.abspath(__file__))
-
-# Path to the background image
-background_image_path = os.path.join(base_dir, 'src', 'mount', 'BCU-Diseases', 'CKD12', 'bg.webp')
-
 # Add custom CSS for background image
 st.markdown(
-    f"""
+    """
     <style>
-    .reportview-container {{
-        background: url("file:///{background_image_path}") no-repeat center center fixed;
+    .reportview-container {
+        background: url("src/mount/BCU-Diseases/CKD12/bg.webp") no-repeat center center fixed;
         background-size: cover;
         background-color: #f0f0f0; /* Fallback color */
-    }}
-    .sidebar .sidebar-content {{
+    }
+    .sidebar .sidebar-content {
         background: rgba(255, 255, 255, 0.8);
-    }}
-    .sidebar .sidebar-content .sidebar-menu {{
+    }
+    .sidebar .sidebar-content .sidebar-menu {
         color: #000;
-    }}
+    }
     </style>
     """,
     unsafe_allow_html=True
@@ -61,7 +50,7 @@ def home_page():
     
 # Predictor Page
 def predictor_page():
-    st.title('Chronic Kidney Disease Predictor')
+    st.title('👨‍⚕️ Chronic Kidney Disease Predictor')
 
     st.markdown("Chronic Kidney Disease (CKD) is a condition where your kidneys don't work as well as they should for a long time. It can make you feel tired, swollen, or have trouble thinking clearly. This web app predicts if a patient has **Chronic Kidney Disease (CKD)** based on the patient's data.")
 
