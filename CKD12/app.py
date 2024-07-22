@@ -1,19 +1,16 @@
-import streamlit as st
-import numpy as np
-import pandas as pd
-import pickle
-import json
 import os
+import pickle
+import streamlit as st
 import base64
+import pandas as pd
+import numpy as np
 
 # Set page configuration
-st.set_page_config(
-    page_title="Chronic Kidney Disease Predictor",
-    page_icon="👨‍⚕️",
-    layout="wide"
-)
+st.set_page_config(page_title="Health Assistant",
+                   layout="wide",
+                   page_icon="🧑‍⚕️")
 
-# Function to set background image
+# Function to set the background image
 def set_page_background(image_path):
     @st.cache_data
     def get_base64_of_bin_file(filename):
@@ -40,7 +37,7 @@ def set_page_background(image_path):
 
 # Get current working directory and file paths
 current_dir = os.path.dirname(os.path.abspath(__file__))
-background_image_path = os.path.join(current_dir, 'bg.jpg')
+background_image_path = os.path.join(current_dir, 'bg.jpg')  # Update this to the path of your background image
 
 # Set background image
 set_page_background(background_image_path)
@@ -63,7 +60,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Title
-st.title('👨‍⚕️ Chronic Kidney Disease Predictor')
+st.title('👨‍⚕️ Chronic Kidney Disease (CKD) Predictor')
 
 # Description
 st.markdown("""
@@ -72,15 +69,9 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# File paths
+# Path to the model file and other assets
 assets_dir = os.path.join(current_dir, 'assets')
-column_info_path = os.path.join(assets_dir, 'column_info.json')
-cat_imputer_path = os.path.join(assets_dir, 'cat_imputer.pickle')
-encoder_path = os.path.join(assets_dir, 'encoder.pickle')
-cont_imputer_path = os.path.join(assets_dir, 'cont_imputer.pickle')
-scaler_path = os.path.join(assets_dir, 'scaler.pickle')
-feat_extraction_path = os.path.join(assets_dir, 'feat_extraction.pickle')
-model_path = os.path.join(assets_dir, 'model.pickle')
+ckd_model_path = os.path.join(assets_dir, 'kidney.sav')
 
 # Debugging output to understand the file structure
 st.text(f"Current directory: {current_dir}")
@@ -88,96 +79,121 @@ st.text(f"Assets directory: {assets_dir}")
 st.text(f"Contents of the current directory: {os.listdir(current_dir)}")
 st.text(f"Contents of the assets directory: {os.listdir(assets_dir)}")
 
-# Check if column_info.json file exists
-if not os.path.exists(column_info_path):
-    st.error(f"File not found: {column_info_path}")
+# Load the pre-trained model
+if os.path.exists(ckd_model_path):
+    with open(ckd_model_path, 'rb') as model_file:
+        CKD_model = pickle.load(model_file)
+else:
+    st.error(f"Model file not found: {ckd_model_path}")
     st.stop()
 
-with open(column_info_path, 'r') as file:
-    column_info = json.load(file)
+# Sample values from the provided data
+sample_values = {
+    "age": 48, "bp": 70, "sg": 1.005, "al": 4, "su": 0, "rbc": 'normal', "pc": 'abnormal',
+    "pcc": 'present', "ba": 'notpresent', "bgr": 117, "bu": 56, "sc": 3.8, "sod": 111,
+    "pot": 2.5, "hemo": 11.2, "pcv": 32, "wc": 6700, "rc": 3.9, "htn": 'yes', "dm": 'no',
+    "cad": 'no', "appet": 'poor', "pe": 'yes', "ane": 'yes'
+}
 
-# Load model and preprocessing objects
-try:
-    with open(cat_imputer_path, 'rb') as file:
-        cat_imputer = pickle.load(file)
-    with open(encoder_path, 'rb') as file:
-        encoder = pickle.load(file)
-    with open(cont_imputer_path, 'rb') as file:
-        cont_imputer = pickle.load(file)
-    with open(scaler_path, 'rb') as file:
-        scaler = pickle.load(file)
-    with open(feat_extraction_path, 'rb') as file:
-        feat_extraction = pickle.load(file)
-    with open(model_path, 'rb') as file:
-        CKD_model = pickle.load(file)
-except FileNotFoundError as e:
-    st.error(f"File not found: {e.filename}")
-    st.stop()
+# Sidebar for navigation
+with st.sidebar:
+    selected = option_menu('Health Assistant',
+                           ['CKD Prediction'],
+                           menu_icon='hospital-fill',
+                           icons=['activity'],
+                           default_index=0)
 
-# Total features and labels
-total_features = 24
-labels = column_info['full']
+# CKD Prediction Page
+if selected == "CKD Prediction":
+    st.title('Chronic Kidney Disease (CKD) Prediction using ML')
 
-# Initialize DataFrame
-X = pd.DataFrame(np.empty((1, total_features)), columns=labels)
-
-def disable_widgets():
-    st.session_state.omit_feat_mat = np.zeros(total_features, dtype=bool)
-    indices = [labels.index(item) for item in st.session_state.omit_feat if item in labels]
-    st.session_state.omit_feat_mat[indices] = True
-
-# Ensure st.session_state.omit_feat_mat is initialized
-if 'omit_feat_mat' not in st.session_state:
-    st.session_state.omit_feat_mat = np.zeros(total_features, dtype=bool)
-
-st.header("Input the Patient's Data")
-omit_feat = st.multiselect("Select the features you don't know", labels, 
-                            placeholder="Omitted Features ex. Potassium (I don't know the potassium level).",
-                            key="omit_feat", on_change=disable_widgets)
-
-with st.empty():
-    if len(st.session_state.omit_feat) > 0:
-        st.info("The model can predict omitted features, bearing in mind that the accuracy may vary.", icon='📖')
-
-# Create input fields
-user_inputs = {}
-for idx, label in enumerate(labels):
-    if st.session_state.omit_feat_mat[idx]:
-        user_inputs[label] = None  # Assume that omitted features are not used for prediction
-    else:
-        if 'select_slider' in st.session_state and st.session_state.select_slider.get(label):
-            user_inputs[label] = st.session_state.select_slider[label]
-        else:
-            if 'selectbox' in st.session_state and st.session_state.selectbox.get(label):
-                user_inputs[label] = st.session_state.selectbox[label]
-            elif 'slider' in st.session_state and st.session_state.slider.get(label):
-                user_inputs[label] = st.session_state.slider[label]
-            else:
-                user_inputs[label] = st.slider(label, min_value=0, max_value=500, value=50)  # default value
-
-# Prediction button
-if st.button('CKD Test Result'):
-    try:
-        # Ensure the input DataFrame is in the correct format
-        user_input_df = pd.DataFrame([user_inputs], columns=labels)
+    # Input fields
+    col1, col2, col3, col4, col5 = st.columns(5)
+    with col1:
+        age = st.number_input('Age', value=sample_values['age'])
+    with col2:
+        bp = st.number_input('Blood Pressure', value=sample_values['bp'])
+    with col3:
+        sg = st.number_input('Specific Gravity', value=sample_values['sg'])
+    with col4:
+        al = st.number_input('Albumin', value=sample_values['al'])
+    with col5:
+        su = st.number_input('Sugar', value=sample_values['su'])
+       
+    with col1:
+        rbc = st.selectbox('Red Blood Cells', ['normal', 'abnormal'], index=0 if sample_values['rbc'] == 'normal' else 1)
+    with col2:
+        pc = st.selectbox('Pus Cell', ['normal', 'abnormal'], index=0 if sample_values['pc'] == 'normal' else 1)
+    with col3:
+        pcc = st.selectbox('Pus Cell Clumps', ['notpresent', 'present'], index=0 if sample_values['pcc'] == 'notpresent' else 1)
+    with col4:
+        ba = st.selectbox('Bacteria', ['notpresent', 'present'], index=0 if sample_values['ba'] == 'notpresent' else 1)
+    with col5:
+        bgr = st.number_input('Blood Glucose Random', value=sample_values['bgr'])
         
-        # Apply preprocessing
-        user_input_processed = user_input_df.copy()
-        # Assuming you have the preprocess functions
-        user_input_processed = cat_imputer.transform(user_input_processed)  # Example
-        user_input_processed = encoder.transform(user_input_processed)  # Example
-        user_input_processed = cont_imputer.transform(user_input_processed)  # Example
-        user_input_processed = scaler.transform(user_input_processed)  # Example
-        user_input_processed = feat_extraction.transform(user_input_processed)  # Example
+    with col1:
+        bu = st.number_input('Blood Urea', value=sample_values['bu'])
+    with col2:
+        sc = st.number_input('Serum Creatinine', value=sample_values['sc'])
+    with col3:
+        sod = st.number_input('Sodium', value=sample_values['sod'])
+    with col4:
+        pot = st.number_input('Potassium', value=sample_values['pot'])
+    with col5:
+        hemo = st.number_input('Hemoglobin', value=sample_values['hemo'])
+         
+    with col1:
+        pcv = st.number_input('Packed Cell Volume', value=sample_values['pcv'])
+    with col2:
+        wc = st.number_input('White Blood Cell Count', value=sample_values['wc'])
+    with col3:
+        rc = st.number_input('Red Blood Cell Count', value=sample_values['rc'])
+    with col4:
+        htn = st.selectbox('Hypertension', ['yes', 'no'], index=0 if sample_values['htn'] == 'yes' else 1)
+    with col5:
+        dm = st.selectbox('Diabetes Mellitus', ['yes', 'no'], index=0 if sample_values['dm'] == 'yes' else 1)
+    
+    with col1:
+        cad = st.selectbox('Coronary Artery Disease', ['yes', 'no'], index=0 if sample_values['cad'] == 'yes' else 1)
+    with col2:
+        appet = st.selectbox('Appetite', ['good', 'poor'], index=0 if sample_values['appet'] == 'good' else 1)
+    with col3:
+        pe = st.selectbox('Pedal Edema', ['yes', 'no'], index=0 if sample_values['pe'] == 'yes' else 1)
+    with col4:
+        ane = st.selectbox('Anemia', ['yes', 'no'], index=0 if sample_values['ane'] == 'yes' else 1)
 
-        # Make prediction
-        ckd_prediction = CKD_model.predict(user_input_processed)
-        if ckd_prediction[0] == 'ckd':
-            ckd_diagnosis = 'The person is likely to have Chronic Kidney Disease'
-        else:
-            ckd_diagnosis = 'The person is not likely to have Chronic Kidney Disease'
-        st.success(ckd_diagnosis)
-    except ValueError as ve:
-        st.error(f'Please enter valid numbers for all fields. ValueError: {ve}')
-    except Exception as e:
-        st.error(f'An error occurred: {str(e)}')
+    # Collect user inputs
+    user_input = [age, bp, sg, al, su, rbc, pc, pcc, ba, bgr, bu, sc, sod, pot, hemo, pcv, wc, rc, htn, dm, cad, appet, pe, ane]
+
+    # Convert categorical variables to numerical values
+    rbc = 1 if rbc == 'abnormal' else 0
+    pc = 1 if pc == 'abnormal' else 0
+    pcc = 1 if pcc == 'present' else 0
+    ba = 1 if ba == 'present' else 0
+    htn = 1 if htn == 'yes' else 0
+    dm = 1 if dm == 'yes' else 0
+    cad = 1 if cad == 'yes' else 0
+    appet = 1 if appet == 'good' else 0
+    pe = 1 if pe == 'yes' else 0
+    ane = 1 if ane == 'yes' else 0
+
+    # Collect user inputs
+    user_input = [age, bp, sg, al, su, rbc, pc, pcc, ba, bgr, bu, sc, sod, pot, hemo, pcv, wc, rc, htn, dm, cad, appet, pe, ane]
+
+    ckd_prediction = ''
+    if st.button('CKD Test Result'):
+        try:
+            # Ensure all inputs are in the correct format
+            user_input = [float(feature) for feature in user_input]
+
+            # Make prediction
+            ckd_prediction = CKD_model.predict([user_input])
+            if ckd_prediction[0] == 'ckd':
+                ckd_diagnosis = 'The person is likely to have Chronic Kidney Disease'
+            else:
+                ckd_diagnosis = 'The person is not likely to have Chronic Kidney Disease'
+            st.success(ckd_diagnosis)
+        except ValueError as ve:
+            st.error(f'Please enter valid numbers for all fields. ValueError: {ve}')
+        except Exception as e:
+            st.error(f'An error occurred: {str(e)}')
