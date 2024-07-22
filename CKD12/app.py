@@ -12,18 +12,18 @@ st.set_page_config(
     layout="wide"
 )
 
-# Add custom CSS for background image
+# Add custom CSS for background image with debugging
 st.markdown(
-    f"""
+    """
     <style>
-    .reportview-container {{
-        background: url("assets/bg.webp");
+    .reportview-container {
+        background: url("assets/bg.webp") no-repeat center center fixed;
         background-size: cover;
-        background-position: center;
-    }}
-    .sidebar .sidebar-content {{
+        background-color: #f0f0f0; /* Fallback color */
+    }
+    .sidebar .sidebar-content {
         background: rgba(255, 255, 255, 0.8);
-    }}
+    }
     </style>
     """,
     unsafe_allow_html=True
