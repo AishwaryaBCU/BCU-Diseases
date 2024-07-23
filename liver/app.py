@@ -32,7 +32,7 @@ def set_page_background(image_path):
         st.text(f"Contents of the current directory: {os.listdir(os.getcwd())}")
 
 # Set background image path
-background_image_path = 'heart/bg.webp'
+background_image_path = 'liver/bg.webp'
 set_page_background(background_image_path)
 
 # Getting the working directory of the app.py
