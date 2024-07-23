@@ -6,7 +6,7 @@ import streamlit as st
 # Set page configuration
 st.set_page_config(page_title="Health Assistant",
                    layout="wide",
-                   page_icon="🧑‍⚕️")
+                   page_icon="🩺")
 
 # Function to set background image
 def set_page_background(image_path):
