@@ -4,7 +4,7 @@ import pickle
 import streamlit as st
 
 # Set page configuration
-st.set_page_config(page_title="Liver Prediction",
+st.set_page_config(page_title="Health Assistant",
                    layout="wide",
                    page_icon="🩺")
 
@@ -82,11 +82,29 @@ def select_sample_values(age, gender):
         return None
 
 def home_page():
-    st.title("Welcome to the Health Assistant Application")
+    st.title("Predictor that You can Trust")
     st.write("""
-    This application is designed to help predict the likelihood of liver disease based on certain medical parameters.
-    Please navigate through the sidebar to use different features of the application.
+    **Liver Disease** is a condition characterized by the dysfunction or damage to the liver, resulting in impaired liver function.
+    Early detection and intervention are crucial to prevent further liver damage and complications.
     """)
+    st.subheader("Machine Learning Project")
+    st.write("""
+    This liver disease prediction tool is developed using machine learning techniques to predict the likelihood of liver disease in individuals based on various health parameters. The model is trained on a dataset that includes parameters such as:
+    
+    - Age
+    - Alkaline Phosphotase
+    - Albumin
+    - Gender
+    - Alamine Aminotransferase
+    - Albumin and Globulin Ratio
+    - Total Bilirubin
+    - Aspartate Aminotransferase
+    - Direct Bilirubin
+    - Total Proteins
+    
+    **Model Accuracy**: The machine learning model used in this project achieves an accuracy of approximately 71% on the test dataset. This means that the model is able to correctly predict liver disease approximately 71% of the time based on the given health parameters.
+    """)
+    st.write("Go to the 'Liver Disease Prediction' page to use the online predictor.")
 
 def disclaimer_page():
     st.title("Disclaimer")
