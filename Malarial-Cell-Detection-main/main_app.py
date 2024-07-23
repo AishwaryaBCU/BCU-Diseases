@@ -14,8 +14,16 @@ def load_model_safely(model_path):
         st.error(f"Error loading model: {e}")
         return None
 
+# Verify the current working directory
+current_working_directory = os.getcwd()
+st.text(f"Current working directory: {current_working_directory}")
+
 # Path to the model file
-model_path = 'malaria_cell_detection.h5'
+model_filename = 'malaria_cell_detection.h5'
+model_path = os.path.join(current_working_directory, model_filename)
+
+# Verify the absolute path to the model file
+st.text(f"Model path: {model_path}")
 
 # Loading the Model
 model = load_model_safely(model_path)
