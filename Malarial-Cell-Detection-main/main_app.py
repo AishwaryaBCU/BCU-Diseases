@@ -5,33 +5,6 @@ from keras.models import load_model
 import os
 
 
-# Function to set background image
-def set_page_background(image_path):
-    @st.cache_data
-    def get_base64_of_bin_file(filename):
-        with open(filename, 'rb') as f:
-            data = f.read()
-        return base64.b64encode(data).decode()
-
-    if os.path.exists(image_path):
-        bin_str = get_base64_of_bin_file(image_path)
-        page_bg_img = f'''
-            <style>
-            .stApp {{
-                background-image: url("data:image/webp;base64,{bin_str}");
-                background-size: cover;
-            }}
-            </style>
-        '''
-        st.markdown(page_bg_img, unsafe_allow_html=True)
-    else:
-        st.warning(f"Background image file '{image_path}' not found.")
-        st.text(f"Current working directory: {os.getcwd()}")
-        st.text(f"Contents of the current directory: {os.listdir(os.getcwd())}")
-
-# Set background image path
-background_image_path = 'heart/bg.webp'
-set_page_background(background_image_path)
 
 
 # Function to load the model with error handling
