@@ -4,6 +4,13 @@ import cv2
 from keras.models import load_model
 import os
 
+
+st.set_page_config(
+    page_title="Chronic Kidney Disease Predictor",
+    page_icon="🦠",
+    layout="wide"
+)
+
 # Function to load the model with error handling
 def load_model_safely(model_path):
     try:
