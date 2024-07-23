@@ -81,60 +81,85 @@ def select_sample_values(age, gender):
     else:
         return None
 
-st.title('Liver Disease Prediction using ML')
+def home_page():
+    st.title("Welcome to the Health Assistant Application")
+    st.write("""
+    This application is designed to help predict the likelihood of liver disease based on certain medical parameters.
+    Please navigate through the sidebar to use different features of the application.
+    """)
 
-# Input fields
-col1, col2, col3, col4 = st.columns(4)
-with col1:
-    age = st.number_input('Age', value=sample1_values['Age'])
-with col2:
-    gender = st.selectbox('Gender', ['Male', 'Female'], index=0 if sample1_values['Gender'] == 'Male' else 1)
-with col3:
-    total_bilirubin = st.number_input('Total Bilirubin', value=sample1_values['Total_Bilirubin'])
-with col4:
-    direct_bilirubin = st.number_input('Direct Bilirubin', value=sample1_values['Direct_Bilirubin'])
+def disclaimer_page():
+    st.title("Disclaimer")
+    st.write("""
+    The predictions made by this application are based on machine learning models and should not be considered as medical advice.
+    Always consult with a healthcare professional for medical advice, diagnosis, or treatment.
+    """)
 
-with col1:
-    alkaline_phosphotase = st.number_input('Alkaline Phosphotase', value=sample1_values['Alkaline_Phosphotase'])
-with col2:
-    alamine_aminotransferase = st.number_input('Alamine Aminotransferase', value=sample1_values['Alamine_Aminotransferase'])
-with col3:
-    aspartate_aminotransferase = st.number_input('Aspartate Aminotransferase', value=sample1_values['Aspartate_Aminotransferase'])
-with col4:
-    total_proteins = st.number_input('Total Proteins', value=sample1_values['Total_Proteins'])
+def liver_disease_prediction():
+    st.title('Liver Disease Prediction using ML')
 
-with col1:
-    albumin = st.number_input('Albumin', value=sample1_values['Albumin'])
-with col2:
-    albumin_and_globulin_ratio = st.number_input('Albumin and Globulin Ratio', value=sample1_values['Albumin_and_Globulin_Ratio'])
+    # Input fields
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        age = st.number_input('Age', value=sample1_values['Age'])
+    with col2:
+        gender = st.selectbox('Gender', ['Male', 'Female'], index=0 if sample1_values['Gender'] == 'Male' else 1)
+    with col3:
+        total_bilirubin = st.number_input('Total Bilirubin', value=sample1_values['Total_Bilirubin'])
+    with col4:
+        direct_bilirubin = st.number_input('Direct Bilirubin', value=sample1_values['Direct_Bilirubin'])
 
-# Convert categorical variables to numerical values
-gender_numeric = 1 if gender == 'Male' else 0
+    with col1:
+        alkaline_phosphotase = st.number_input('Alkaline Phosphotase', value=sample1_values['Alkaline_Phosphotase'])
+    with col2:
+        alamine_aminotransferase = st.number_input('Alamine Aminotransferase', value=sample1_values['Alamine_Aminotransferase'])
+    with col3:
+        aspartate_aminotransferase = st.number_input('Aspartate Aminotransferase', value=sample1_values['Aspartate_Aminotransferase'])
+    with col4:
+        total_proteins = st.number_input('Total Proteins', value=sample1_values['Total_Proteins'])
 
-# Collect user inputs
-user_input = [age, gender_numeric, total_bilirubin, direct_bilirubin, alkaline_phosphotase, alamine_aminotransferase,
-              aspartate_aminotransferase, total_proteins, albumin, albumin_and_globulin_ratio]
+    with col1:
+        albumin = st.number_input('Albumin', value=sample1_values['Albumin'])
+    with col2:
+        albumin_and_globulin_ratio = st.number_input('Albumin and Globulin Ratio', value=sample1_values['Albumin_and_Globulin_Ratio'])
 
-liver_prediction = ''
-if st.button('Liver Disease Test Result'):
-    try:
-        # Ensure all inputs are in the correct format
-        user_input = [float(feature) for feature in user_input]
+    # Convert categorical variables to numerical values
+    gender_numeric = 1 if gender == 'Male' else 0
 
-        # Make prediction
-        liver_prediction = liver_model.predict([user_input])[0]
-        
-        # Determine if the person likely has liver disease based on gender and key indicators
-        if (alamine_aminotransferase > 40 or aspartate_aminotransferase > 40 or total_bilirubin > 1.2 or direct_bilirubin > 0.3):
-            liver_diagnosis = 'The person is likely to have Liver Disease'
-        else:
-            liver_diagnosis = 'The person is NOT likely to have Liver Disease'
-        
-        st.success(liver_diagnosis)
-    except ValueError as ve:
-        st.error(f'Please enter valid numbers for all fields. ValueError: {ve}')
-    except Exception as e:
-        st.error(f'An error occurred: {str(e)}')
+    # Collect user inputs
+    user_input = [age, gender_numeric, total_bilirubin, direct_bilirubin, alkaline_phosphotase, alamine_aminotransferase,
+                  aspartate_aminotransferase, total_proteins, albumin, albumin_and_globulin_ratio]
+
+    liver_prediction = ''
+    if st.button('Liver Disease Test Result'):
+        try:
+            # Ensure all inputs are in the correct format
+            user_input = [float(feature) for feature in user_input]
+
+            # Make prediction
+            liver_prediction = liver_model.predict([user_input])[0]
+
+            # Determine if the person likely has liver disease based on gender and key indicators
+            if (alamine_aminotransferase > 40 or aspartate_aminotransferase > 40 or total_bilirubin > 1.2 or direct_bilirubin > 0.3):
+                liver_diagnosis = 'The person is likely to have Liver Disease'
+            else:
+                liver_diagnosis = 'The person is NOT likely to have Liver Disease'
+
+            st.success(liver_diagnosis)
+        except ValueError as ve:
+            st.error(f'Please enter valid numbers for all fields. ValueError: {ve}')
+        except Exception as e:
+            st.error(f'An error occurred: {str(e)}')
+
+# Sidebar navigation
+page = st.sidebar.selectbox("Choose a page", ["Home", "Liver Disease Prediction", "Disclaimer"])
+
+if page == "Home":
+    home_page()
+elif page == "Liver Disease Prediction":
+    liver_disease_prediction()
+elif page == "Disclaimer":
+    disclaimer_page()
 
 # Running the app
 if __name__ == '__main__':
