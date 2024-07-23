@@ -14,11 +14,8 @@ def load_model_safely(model_path):
         st.error(f"Error loading model: {e}")
         return None
 
-# Getting the working directory of the script
-working_dir = os.path.dirname(os.path.abspath(__file__))
-
 # Path to the model file
-model_path = os.path.join(working_dir, 'malaria_cell_detection.h5')
+model_path = 'malaria_cell_detection.h5'
 
 # Loading the Model
 model = load_model_safely(model_path)
@@ -60,3 +57,5 @@ if submit:
             st.error(f"Error processing the image: {e}")
     else:
         st.error("Please upload an image.")
+else:
+    st.info("Click 'Predict' to analyze the image.")
