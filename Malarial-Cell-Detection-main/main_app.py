@@ -6,7 +6,7 @@ import os
 
 
 st.set_page_config(
-    page_title="Chronic Kidney Disease Predictor",
+    page_title="Malaria Prediction",
     page_icon="🦠",
     layout="wide"
 )
