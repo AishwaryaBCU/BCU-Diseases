@@ -10,7 +10,6 @@ st.set_page_config(page_title="Health Assistant",
 
 # Function to set background image
 def set_page_background(image_path):
-    @st.cache_data
     def get_base64_of_bin_file(filename):
         with open(filename, 'rb') as f:
             data = f.read()
