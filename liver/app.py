@@ -4,7 +4,7 @@ import pickle
 import streamlit as st
 
 # Set page configuration
-st.set_page_config(page_title="Health Assistant",
+st.set_page_config(page_title="Liver Prediction",
                    layout="wide",
                    page_icon="🩺")
 
