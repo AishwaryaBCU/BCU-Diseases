@@ -18,6 +18,10 @@ def load_model_safely(model_path):
 current_working_directory = os.getcwd()
 st.text(f"Current working directory: {current_working_directory}")
 
+# List files in the current working directory
+files_in_directory = os.listdir(current_working_directory)
+st.text(f"Files in the directory: {files_in_directory}")
+
 # Path to the model file
 model_filename = 'malaria_cell_detection.h5'
 model_path = os.path.join(current_working_directory, model_filename)
