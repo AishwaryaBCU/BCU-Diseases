@@ -1,0 +1,57 @@
+<html>
+<style>
+    body {
+        background-image: url('img/bg-img/breadcumb3.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+    .content-container {
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 50px;
+    }
+    h1 {
+        color: white;
+    }
+    h3 {
+        color: black;
+    }
+</style>
+
+<div class="container">
+    <div class="alert alert-danger"></div>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <center><h1>Breast Cancer Prediction</h1></center>
+            <div class="card card-body mt-3 content-container" style="border: 1px solid white;">
+                <h3>About Breast Cancer</h3>
+                <p>Breast cancer is a type of cancer that forms in the cells of the breasts. It can occur in both men and women, but it's far more common in women. The exact cause of breast cancer is unknown, but some factors such as genetics, age, and lifestyle choices may increase the risk of developing it.</p>
+                
+                <h3>Machine Learning Project</h3>
+                <p>This breast cancer prediction tool is developed using machine learning techniques to predict the likelihood of breast cancer in individuals based on various health parameters. The model is trained on the Breast Cancer Wisconsin (Diagnostic) Dataset, which includes parameters such as:</p>
+                <ul>
+                    <li>Radius (mean of distances from center to points on the perimeter)</li>
+                    <li>Texture (standard deviation of gray-scale values)</li>
+                    <li>Perimeter</li>
+                    <li>Area</li>
+                    <li>Smoothness (local variation in radius lengths)</li>
+                    <li>Compactness (perimeter^2 / area - 1.0)</li>
+                    <li>Concavity (severity of concave portions of the contour)</li>
+                    <li>Concave points (number of concave portions of the contour)</li>
+                    <li>Symmetry</li>
+                    <li>Fractal dimension (coastline approximation - 1)</li>
+                </ul>
+                
+                <h3>Model Accuracy</h3>
+                <p>The machine learning model used in this project achieves an accuracy of approximately 95% on the test dataset. This means that the model is able to correctly predict breast cancer 95% of the time based on the given health parameters.</p>
+
+                <div class="text-center mt-4">
+                    <a href="https://bcu-breastcancer-predict.streamlit.app/" target="_blank" class="btn btn-primary btn-lg">Go to Online Predictor</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

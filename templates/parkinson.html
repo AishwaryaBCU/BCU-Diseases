@@ -1,0 +1,59 @@
+<html>
+<style>
+    body {
+        background-image: url('img/bg-img/breadcumb3.jpg');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+    .content-container {
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 50px;
+    }
+    h1 {
+        color: white;
+    }
+    h3 {
+        color: black;
+    }
+</style>
+
+<div class="container">
+    <div class="alert alert-danger"></div>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <center><h1>Parkinson's Disease Prediction</h1></center>
+            <div class="card card-body mt-3 content-container" style="border: 1px solid white;">
+                <h3>About Parkinson's Disease</h3>
+                <p>Parkinson's disease is a progressive nervous system disorder that affects movement. Symptoms start gradually, sometimes starting with a barely noticeable tremor in just one hand. Tremors are common, but the disorder also commonly causes stiffness or slowing of movement.</p>
+                
+                <h3>Machine Learning Project</h3>
+                <p>This Parkinson's disease prediction tool is developed using machine learning techniques to predict the likelihood of Parkinson's disease in individuals based on various health parameters. The model is trained on the Parkinson's Disease Dataset, which includes parameters such as:</p>
+                <ul>
+                    <li>MDVP: Fo(Hz) - Average vocal fundamental frequency</li>
+                    <li>MDVP: Fhi(Hz) - Maximum vocal fundamental frequency</li>
+                    <li>MDVP: Flo(Hz) - Minimum vocal fundamental frequency</li>
+                    <li>MDVP: Jitter(%) - Variation in fundamental frequency</li>
+                    <li>MDVP: Shimmer - Variation in amplitude</li>
+                    <li>HNR - Harmonics-to-noise ratio</li>
+                    <li>RPDE - Recurrence period density entropy</li>
+                    <li>DFA - Detrended fluctuation analysis</li>
+                    <li>Spread1 - Nonlinear measures of fundamental frequency variation</li>
+                    <li>Spread2 - Nonlinear measures of fundamental frequency variation</li>
+                    <li>D2 - Correlation dimension</li>
+                    <li>PPE - Pitch period entropy</li>
+                </ul>
+                
+                <h3>Model Accuracy</h3>
+                <p>The machine learning model used in this project achieves an accuracy of approximately 90% on the test dataset. This means that the model is able to correctly predict Parkinson's disease 90% of the time based on the given health parameters.</p>
+
+                <div class="text-center mt-4">
+                    <a href="https://bcu-parkinson-predict.streamlit.app/" target="_blank" class="btn btn-primary btn-lg">Go to Online Predictor</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>
