@@ -90,7 +90,7 @@ def show_heart_disease_prediction():
         try:
             user_input = [age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]
             prediction = heart_disease_model.predict([user_input])
-            if prediction[0] == 1:
+            if prediction[0] == 0:
                 st.success("The person has a risk of heart disease.")
             else:
                 st.success("The person does not have a risk of heart disease.")
